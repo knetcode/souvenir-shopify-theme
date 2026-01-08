@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "announcement_text": "Promotional offer or updates here just one line"
+      }
+    }
+  },
+  "order": ["header"]
+}

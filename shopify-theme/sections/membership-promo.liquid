@@ -1,0 +1,73 @@
+{% schema %}
+{
+  "name": "Membership Promo",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Become a Member"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Get unlimited access to all itineraries, exclusive content, and early access to new editions."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Learn More"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6">
+  <div class="container">
+    <div class="relative aspect-video overflow-hidden bg-pink">
+      {%- if section.settings.background_image != blank -%}
+        {{
+          section.settings.background_image
+          | image_url: width: 1200
+          | image_tag: loading: 'lazy', alt: section.settings.heading, class: 'object-cover opacity-80'
+        }}
+      {%- endif -%}
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-white/30">
+        <h3 class="text-3xl md:text-4xl mb-4">{{ section.settings.heading }}</h3>
+        <p class="text-gray mb-6 max-w-md">
+          {{ section.settings.description }}
+        </p>
+        {%- if section.settings.link != blank -%}
+          <a href="{{ section.settings.link }}" class="bg-foreground text-white px-6 py-3 text-sm uppercase tracking-wide hover:bg-transparent hover:text-foreground border border-foreground transition-colors">
+            {{ section.settings.link_text }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bg-white\/30 {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+</style>

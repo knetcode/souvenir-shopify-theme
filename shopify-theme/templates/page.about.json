@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Thanks for being here!",
+        "background_color": "yellow"
+      }
+    },
+    "content": {
+      "type": "page-about-content",
+      "settings": {}
+    },
+    "team": {
+      "type": "page-team",
+      "settings": {}
+    },
+    "contact": {
+      "type": "page-contact",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "content", "team", "contact"]
+}

@@ -1,0 +1,164 @@
+{
+  "sections": {
+    "hero_featured": {
+      "type": "hero-featured",
+      "settings": {
+        "label": "Our Top Itinerary",
+        "title": "THE DANISH\nRIVIERA",
+        "duration": "7 days",
+        "description": "There's a particular type of summer holiday that Denmark does especially well— low-key, design-forward, and ruggedly beautiful without trying too hard. It offers something slow and more grounded: fresh air, wild white sand beaches, excellent food, and the kind of child-friendly rhythm that doesn't sacrifice grown-up enjoyment.",
+        "link_text": "Read Itinerary"
+      }
+    },
+    "welcome": {
+      "type": "welcome",
+      "settings": {
+        "label": "Welcome to Souvenir",
+        "heading": "A place to find real travel itineraries by trusted creative parents with the insights you actually need to know.",
+        "link_text": "Discover more"
+      }
+    },
+    "edition_featured": {
+      "type": "edition-featured",
+      "settings": {
+        "edition_title": "EDITION ONE",
+        "edition_subtitle": "North Zealand, Denmark",
+        "itinerary_label": "7 Days in North Zealand, Denmark",
+        "itinerary_title": "Sun, sea & skies on the North Zealand coast. How we did it in detail day-by-day.",
+        "shop_title": "The perfect cotton co-ords we discovered in North Zealand and couldn't wait to share with you."
+      },
+      "blocks": {
+        "article_1": {
+          "type": "article",
+          "settings": {
+            "category": "Spending Time With",
+            "title": "A conversation with the fashion duo bringing knitting to the cool girls of Copenhagen"
+          }
+        },
+        "article_2": {
+          "type": "article",
+          "settings": {
+            "category": "Postcards",
+            "title": "The owner of our favourite café in Helsingor tells us the untouched corners of Denmark she explores with her three boys"
+          }
+        },
+        "article_3": {
+          "type": "article",
+          "settings": {
+            "category": "Summer Leaves",
+            "title": "A love letter to the summer houses of Denmark (and how to rent one)"
+          }
+        },
+        "article_4": {
+          "type": "article",
+          "settings": {
+            "category": "Kit",
+            "title": "Essential travel items"
+          }
+        }
+      },
+      "block_order": ["article_1", "article_2", "article_3", "article_4"]
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "text": "Souvenir has completely changed how we plan family trips. The itineraries are practical, beautiful, and actually work with kids.",
+            "author": "Rosie"
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "text": "Finally, travel content that understands what parents need. No more endless research—just trust and go.",
+            "author": "Onjola"
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "text": "The details in these itineraries are incredible. From the best bakeries to kid-friendly beaches, everything is thoughtfully curated.",
+            "author": "Giovanna"
+          }
+        }
+      },
+      "block_order": ["testimonial_1", "testimonial_2", "testimonial_3"]
+    },
+    "categories": {
+      "type": "categories",
+      "blocks": {
+        "tab_1": {
+          "type": "category_tab",
+          "settings": {
+            "label": "School Holidays"
+          }
+        },
+        "tab_2": {
+          "type": "category_tab",
+          "settings": {
+            "label": "People"
+          }
+        },
+        "tab_3": {
+          "type": "category_tab",
+          "settings": {
+            "label": "Adventure"
+          }
+        },
+        "tab_4": {
+          "type": "category_tab",
+          "settings": {
+            "label": "City Breaks"
+          }
+        },
+        "item_1": {
+          "type": "category_item",
+          "settings": {
+            "title": "Half Term in Mallorca",
+            "author": "Half Term"
+          }
+        },
+        "item_2": {
+          "type": "category_item",
+          "settings": {
+            "title": "Easter in Lisbon",
+            "author": "Laura Reed"
+          }
+        },
+        "item_3": {
+          "type": "category_item",
+          "settings": {
+            "title": "Summer in Normandy",
+            "author": "Tessa Norman"
+          }
+        },
+        "item_4": {
+          "type": "category_item",
+          "settings": {
+            "title": "Christmas in Vienna",
+            "author": "Vienna"
+          }
+        }
+      },
+      "block_order": ["tab_1", "tab_2", "tab_3", "tab_4", "item_1", "item_2", "item_3", "item_4"]
+    },
+    "membership_promo": {
+      "type": "membership-promo",
+      "settings": {
+        "heading": "Become a Member",
+        "description": "Get unlimited access to all itineraries, exclusive content, and early access to new editions.",
+        "link_text": "Learn More"
+      }
+    }
+  },
+  "order": [
+    "hero_featured",
+    "welcome",
+    "edition_featured",
+    "testimonials",
+    "categories",
+    "membership_promo"
+  ]
+}

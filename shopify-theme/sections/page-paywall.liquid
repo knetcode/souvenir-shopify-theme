@@ -1,0 +1,66 @@
+{%- comment -%}
+  Paywall Page Section
+  
+  This section displays content only to customers who have purchased
+  a specific product (one-off paywall).
+{%- endcomment -%}
+
+{%- assign paywall_product_handle = section.settings.paywall_product_handle | default: 'premium-content-pass' -%}
+{%- render 'access-control', access_type: 'paywall', paywall_product_handle: paywall_product_handle -%}
+
+<div class="container">
+  {%- if has_access -%}
+    <div class="page-paywall__content">
+      <h1 class="text-3xl md:text-4xl mb-8">{{ page.title }}</h1>
+      <div class="prose max-w-none">
+        {{ page.content }}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="page-paywall__restricted">
+      {%- if customer -%}
+        <h1 class="text-3xl md:text-4xl mb-4">Unlock This Content</h1>
+        <p class="text-lg text-gray mb-8">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="btn-primary">Purchase Access</a>
+      {%- else -%}
+        <h1 class="text-3xl md:text-4xl mb-4">Login Required</h1>
+        <p class="text-lg text-gray mb-8">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="btn-primary">Log In</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .page-paywall__content {
+    padding: 2rem 0;
+  }
+  
+  .page-paywall__restricted {
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .page-paywall__restricted h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .page-paywall__restricted p {
+    margin-bottom: 2rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Paywall Protected Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "paywall_product_handle",
+      "label": "Paywall Product Handle",
+      "info": "The handle of the product that grants access (e.g., 'premium-content-pass')",
+      "default": "premium-content-pass"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+{% comment %}
+  Access Control Snippet
+  
+  This snippet provides reusable logic for checking different types of access:
+  - login: Requires customer to be logged in
+  - paywall: Requires customer to have purchased a specific product
+  - membership: Requires customer to have an active membership tag
+  
+  Usage:
+  {% render 'access-control', access_type: 'login' %}
+  {% render 'access-control', access_type: 'paywall', paywall_product_handle: 'premium-pass' %}
+  {% render 'access-control', access_type: 'membership', membership_tag: 'member-active' %}
+{% endcomment %}
+
+{% assign has_access = false %}
+{% assign access_message = '' %}
+{% assign redirect_url = '' %}
+
+{% case access_type %}
+  {% when 'login' %}
+    {% if customer %}
+      {% assign has_access = true %}
+    {% else %}
+      {% assign access_message = 'Please log in to view this content.' %}
+      {% assign redirect_url = '/account/login?return_url=' | append: request.path %}
+    {% endif %}
+
+  {% when 'paywall' %}
+    {% if customer %}
+      {% assign paywall_product_handle = paywall_product_handle | default: 'premium-content-pass' %}
+      
+      {% comment %} Check if customer has purchased the paywall product {% endcomment %}
+      {% for order in customer.orders %}
+        {% if order.financial_status == 'paid' %}
+          {% for line_item in order.line_items %}
+            {% if line_item.product.handle == paywall_product_handle %}
+              {% assign has_access = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% if has_access %}{% break %}{% endif %}
+        {% endif %}
+      {% endfor %}
+      
+      {% unless has_access %}
+        {% assign access_message = 'Purchase the Premium Content Pass to unlock this page.' %}
+        {% assign redirect_url = '/products/' | append: paywall_product_handle %}
+      {% endunless %}
+    {% else %}
+      {% assign access_message = 'Please log in to check your access.' %}
+      {% assign redirect_url = '/account/login?return_url=' | append: request.path %}
+    {% endif %}
+
+  {% when 'membership' %}
+    {% if customer %}
+      {% assign membership_tag = membership_tag | default: 'member-active' %}
+      
+      {% comment %} Check if customer has the membership tag {% endcomment %}
+      {% if customer.tags contains membership_tag %}
+        {% assign has_access = true %}
+      {% else %}
+        {% assign access_message = 'Become a member to view this content.' %}
+        {% assign redirect_url = '/products/monthly-membership' %}
+      {% endif %}
+    {% else %}
+      {% assign access_message = 'Please log in to check your membership status.' %}
+      {% assign redirect_url = '/account/login?return_url=' | append: request.path %}
+    {% endif %}
+
+  {% else %}
+    {% comment %} Free access - no restrictions {% endcomment %}
+    {% assign has_access = true %}
+{% endcase %}
+

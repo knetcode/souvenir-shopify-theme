@@ -1,0 +1,212 @@
+{% schema %}
+{
+  "name": "Current Edition",
+  "settings": [
+    {
+      "type": "text",
+      "id": "edition_title",
+      "label": "Edition Title",
+      "default": "EDITION ONE"
+    },
+    {
+      "type": "text",
+      "id": "edition_subtitle",
+      "label": "Edition Subtitle",
+      "default": "North Zealand, Denmark"
+    },
+    {
+      "type": "image_picker",
+      "id": "itinerary_image",
+      "label": "Itinerary Image"
+    },
+    {
+      "type": "text",
+      "id": "itinerary_label",
+      "label": "Itinerary Label",
+      "default": "7 Days in North Zealand, Denmark"
+    },
+    {
+      "type": "text",
+      "id": "itinerary_title",
+      "label": "Itinerary Title"
+    },
+    {
+      "type": "url",
+      "id": "itinerary_link",
+      "label": "Itinerary Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "shop_image",
+      "label": "Shop Image"
+    },
+    {
+      "type": "text",
+      "id": "shop_title",
+      "label": "Shop Title"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "carousel_image",
+      "name": "Carousel Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "article",
+      "name": "Article",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<section class="mb-16">
+  <div class="container">
+    <h1 class="text-3xl md:text-4xl mb-2">{{ section.settings.edition_title }}</h1>
+    <p class="text-gray mb-8">{{ section.settings.edition_subtitle }}</p>
+
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      {%- comment -%} Video/Itinerary Card {%- endcomment -%}
+      <div>
+        {%- if section.settings.itinerary_image != blank -%}
+          <div class="relative aspect-video bg-pink mb-4 overflow-hidden">
+            {{
+              section.settings.itinerary_image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', alt: section.settings.itinerary_title, class: 'object-cover'
+            }}
+            <div class="absolute top-4 left-4 bg-white px-3 py-1 text-sm">
+              VIDEO
+            </div>
+          </div>
+        {%- endif -%}
+        <p class="text-xs uppercase tracking-wider text-gray mb-2">
+          {{ section.settings.itinerary_label }}
+        </p>
+        <h3 class="text-xl mb-2">
+          {{ section.settings.itinerary_title }}
+        </h3>
+        {%- if section.settings.itinerary_link != blank -%}
+          <a href="{{ section.settings.itinerary_link }}" class="read-more">
+            Get the full itinerary
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Shop Card {%- endcomment -%}
+      <div>
+        {%- if section.settings.shop_image != blank -%}
+          <div class="relative aspect-video overflow-hidden mb-4">
+            {{
+              section.settings.shop_image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', alt: section.settings.shop_title, class: 'object-cover'
+            }}
+          </div>
+        {%- endif -%}
+        <p class="text-xs uppercase tracking-wider text-gray mb-2">
+          Shop
+        </p>
+        <h3 class="text-xl mb-2">
+          {{ section.settings.shop_title }}
+        </h3>
+        {%- if section.settings.shop_link != blank -%}
+          <a href="{{ section.settings.shop_link }}" class="read-more">
+            Shop now
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} Carousel Section {%- endcomment -%}
+    {%- assign carousel_images = section.blocks | where: 'type', 'carousel_image' -%}
+    {%- if carousel_images.size > 0 -%}
+      <div class="mb-12">
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+          {%- for block in carousel_images -%}
+            {%- if block.settings.image != blank -%}
+              <div class="flex-shrink-0 w-64 md:w-72 aspect-4-5 relative snap-start">
+                {{
+                  block.settings.image
+                  | image_url: width: 400
+                  | image_tag: loading: 'lazy', alt: block.settings.image.alt, class: 'object-cover'
+                }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+          <button class="flex-shrink-0 w-12 h-12 border border-foreground flex items-center justify-center self-center ml-4 hover:bg-foreground hover:text-white transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Article Cards {%- endcomment -%}
+    {%- assign articles = section.blocks | where: 'type', 'article' -%}
+    {%- if articles.size > 0 -%}
+      <div class="grid md:grid-cols-4 gap-6">
+        {%- for block in articles -%}
+          <article class="group">
+            {%- if block.settings.image != blank -%}
+              <div class="relative aspect-4-5 overflow-hidden mb-4 bg-pink">
+                {{
+                  block.settings.image
+                  | image_url: width: 400
+                  | image_tag: loading: 'lazy', alt: block.settings.title, class: 'object-cover'
+                }}
+              </div>
+            {%- endif -%}
+            {%- if block.settings.category != blank -%}
+              <p class="text-xs uppercase tracking-wider text-gray mb-1">
+                {{ block.settings.category }}
+              </p>
+            {%- endif -%}
+            <h3 class="text-base mb-2">
+              {{ block.settings.title }}
+            </h3>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="read-more text-sm">
+                Read more
+              </a>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>

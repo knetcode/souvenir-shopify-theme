@@ -1,0 +1,67 @@
+{% schema %}
+{
+  "name": "Article Main",
+  "settings": {}
+}
+{% endschema %}
+
+<div class="py-8 px-6">
+  <div class="container max-w-4xl">
+    {%- comment -%} Breadcrumb {%- endcomment -%}
+    <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-gray mb-2">
+      <a href="{{ blog.url }}" class="hover:opacity-70">{{ blog.title }}</a>
+      <span>/</span>
+      <span>{{ article.title }}</span>
+    </div>
+
+    {%- comment -%} Title {%- endcomment -%}
+    <h1 class="text-4xl md:text-5xl mb-6">{{ article.title }}</h1>
+
+    {%- comment -%} Introduction {%- endcomment -%}
+    {%- if article.excerpt != blank -%}
+      <p class="text-lg text-gray mb-12">
+        {{ article.excerpt }}
+      </p>
+    {%- endif -%}
+
+    {%- comment -%} Hero Image {%- endcomment -%}
+    {%- if article.image != blank -%}
+      <div class="relative aspect-video overflow-hidden mb-12">
+        {{
+          article.image
+          | image_url: width: 1200
+          | image_tag: loading: 'eager', alt: article.title, class: 'object-cover'
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Content {%- endcomment -%}
+    <div class="prose prose-lg max-w-none space-y-6">
+      {{ article.content }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .prose {
+    color: var(--gray);
+  }
+  
+  .prose p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .prose-lg {
+    font-size: 1.125rem;
+  }
+  
+  .max-w-none {
+    max-width: none;
+  }
+</style>

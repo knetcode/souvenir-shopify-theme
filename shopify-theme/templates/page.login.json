@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "login": {
+      "type": "page-login",
+      "settings": {}
+    }
+  },
+  "order": ["login"]
+}

@@ -1,0 +1,110 @@
+{% comment %}
+  Membership-Protected Page Template
+  This template can be selected when creating/editing pages in Shopify Admin
+{% endcomment %}
+
+{% layout 'theme' %}
+
+{% comment %}
+  IMPORTANT: In Shopify, the customer object is only available on customer account pages
+  (/account/*), not on regular page templates. This is a Shopify limitation.
+
+  We need to check the customer object directly in the template.
+{% endcomment %}
+{% assign membership_tag = 'member-active' %}
+{% assign has_access = false %}
+{% assign access_message = 'Become a member to view this content.' %}
+{% assign redirect_url = '/products/monthly-membership' %}
+
+{% comment %} Check if customer object exists and has the membership tag {% endcomment %}
+{% if customer %}
+  {% if customer.tags contains membership_tag %}
+    {% assign has_access = true %}
+  {% endif %}
+{% else %}
+  {% assign access_message = 'Please log in to check your membership status.' %}
+  {% assign redirect_url = '/account/login?return_url=' | append: request.path %}
+{% endif %}
+
+<style>
+  .page-membership__restricted .button:hover {
+    background-color: #333 !important;
+  }
+  .page-membership__restricted .button:active {
+    background-color: #555 !important;
+  }
+</style>
+
+<div class="page-width" style="padding: 4rem 0;">
+  {% if has_access %}
+    <div class="page-membership__content">
+      <h1>{{ page.title }}</h1>
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+  {% else %}
+    <div class="page-membership__restricted" style="text-align: center; padding: 4rem 0;">
+      {% if customer %}
+        <h1>Membership Required</h1>
+        <p style="font-size: 1.1rem; margin: 2rem 0;">{{ access_message }}</p>
+
+        {% comment %} Debug output - remove after fixing {% endcomment %}
+        <div style="background: #f5f5f5; padding: 1rem; margin: 1rem 0; border-radius: 4px; font-size: 0.9rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+          <strong>Debug Info:</strong><br>
+          Customer object exists: {% if customer %}YES (ID: {{ customer.id }}){% else %}NO{% endif -%}
+          <br>
+          Customer tags: {{ customer.tags | join: ', ' -}}
+          <br>
+          Looking for tag: {{ membership_tag -}}
+          <br>
+          Has tag: {% if customer.tags contains membership_tag %}YES{% else %}NO{% endif -%}
+          <br>
+          Has access: {{ has_access }}
+        </div>
+
+        {% if redirect_url != blank %}
+          <a
+            href="{{ redirect_url }}"
+            class="button"
+            style="display: inline-block; padding: 0.75rem 2rem; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;"
+            >Start Membership</a
+          >
+        {% else %}
+          <a
+            href="/products/monthly-membership"
+            class="button"
+            style="display: inline-block; padding: 0.75rem 2rem; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;"
+            >Start Membership</a
+          >
+        {% endif %}
+      {% else %}
+        <h1>Login Required</h1>
+        <p style="font-size: 1.1rem; margin: 2rem 0;">{{ access_message }}</p>
+
+        {% comment %} Debug output {% endcomment %}
+        <div style="background: #f5f5f5; padding: 1rem; margin: 1rem 0; border-radius: 4px; font-size: 0.9rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+          <strong>Debug Info:</strong><br>
+          Customer object exists: NO<br>
+          You need to be logged in to check membership status.
+        </div>
+
+        {% if redirect_url != blank %}
+          <a
+            href="{{ redirect_url }}"
+            class="button"
+            style="display: inline-block; padding: 0.75rem 2rem; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;"
+            >Log In</a
+          >
+        {% else %}
+          <a
+            href="/account/login"
+            class="button"
+            style="display: inline-block; padding: 0.75rem 2rem; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;"
+            >Log In</a
+          >
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

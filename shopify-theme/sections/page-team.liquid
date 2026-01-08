@@ -1,0 +1,62 @@
+{% schema %}
+{
+  "name": "Team Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Team Member Image"
+    },
+    {
+      "type": "text",
+      "id": "name",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "role",
+      "label": "Role"
+    },
+    {
+      "type": "richtext",
+      "id": "bio",
+      "label": "Bio"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6 bg-cream">
+  <div class="container text-center">
+    {%- if section.settings.image != blank -%}
+      <div class="relative w-48 h-48 mx-auto mb-8 overflow-hidden rounded-full">
+        {{
+          section.settings.image
+          | image_url: width: 400
+          | image_tag: loading: 'lazy', alt: section.settings.name, class: 'object-cover'
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.role != blank -%}
+      <h3 class="text-xl italic mb-4">About {{ section.settings.name }}</h3>
+    {%- endif -%}
+
+    {%- if section.settings.bio != blank -%}
+      <div class="text-gray max-w-2xl mx-auto">
+        {{ section.settings.bio }}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .rounded-full {
+    border-radius: 9999px;
+  }
+  
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>

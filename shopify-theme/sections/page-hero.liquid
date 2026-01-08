@@ -1,0 +1,70 @@
+{% schema %}
+{
+  "name": "Page Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background Color",
+      "options": [
+        {
+          "value": "yellow",
+          "label": "Yellow"
+        },
+        {
+          "value": "pink",
+          "label": "Pink"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6 {% if section.settings.background_color == 'yellow' %}bg-yellow{% elsif section.settings.background_color == 'pink' %}bg-pink{% endif %}">
+  <div class="container text-center">
+    {%- if section.settings.heading != blank -%}
+      <h1 class="text-4xl md:text-5xl italic mb-12">
+        {{ section.settings.heading }}
+      </h1>
+    {%- endif -%}
+    
+    {%- if section.settings.image != blank -%}
+      <div class="relative aspect-video max-w-2xl mx-auto mb-12 overflow-hidden">
+        {{
+          section.settings.image
+          | image_url: width: 800
+          | image_tag: loading: 'lazy', alt: section.settings.heading, class: 'object-cover'
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.description != blank -%}
+      <div class="max-w-xl mx-auto">
+        <p class="text-xl md:text-2xl italic leading-relaxed">
+          {{ section.settings.description }}
+        </p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>

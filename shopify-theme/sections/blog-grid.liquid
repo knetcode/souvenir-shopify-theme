@@ -1,0 +1,50 @@
+{% schema %}
+{
+  "name": "Blog Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles per page",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}
+
+<div class="px-6 pb-8">
+  <div class="container">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {%- for article in blog.articles limit: section.settings.articles_per_page -%}
+        <article class="group">
+          <a href="{{ article.url }}">
+            {%- if article.image != blank -%}
+              <div class="relative aspect-4-3 overflow-hidden mb-4">
+                {{
+                  article.image
+                  | image_url: width: 400
+                  | image_tag: loading: 'lazy', alt: article.title, class: 'object-cover transition-transform duration-300 group-hover:scale-105'
+                }}
+              </div>
+            {%- endif -%}
+            
+            {%- if article.tags.size > 0 -%}
+              <p class="text-xs uppercase tracking-wider text-gray mb-1">
+                {{ article.tags.first }}
+              </p>
+            {%- endif -%}
+            
+            <h3 class="text-base mb-2">
+              {{ article.title }}
+            </h3>
+            
+            <span class="read-more text-sm">Read More</span>
+          </a>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>

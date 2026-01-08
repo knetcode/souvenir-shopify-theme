@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "paywall": {
+      "type": "page-paywall",
+      "settings": {
+        "paywall_product_handle": "premium-content-pass"
+      }
+    }
+  },
+  "order": ["paywall"]
+}

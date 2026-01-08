@@ -1,0 +1,49 @@
+{% schema %}
+{
+  "name": "Article Related",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You Might Also Like..."
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-12 mt-12 border-t border-gray-100">
+  <div class="container">
+    <h2 class="text-2xl mb-8 uppercase tracking-wide">{{ section.settings.heading }}</h2>
+
+    <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+      {%- for article in blog.articles limit: 4 -%}
+        {%- unless article.id == article.id -%}
+          <div class="flex-shrink-0 w-64 snap-start">
+            <a href="{{ article.url }}">
+              {%- if article.image != blank -%}
+                <div class="relative aspect-4-5 overflow-hidden mb-4 bg-pink">
+                  {{
+                    article.image
+                    | image_url: width: 400
+                    | image_tag: loading: 'lazy', alt: article.title, class: 'object-cover'
+                  }}
+                </div>
+              {%- endif -%}
+              <p class="text-xs uppercase tracking-wider text-gray mb-1">
+                {{ blog.title }}
+              </p>
+              <h3 class="text-base mb-2">{{ article.title }}</h3>
+              <span class="read-more text-sm">Read More</span>
+            </a>
+          </div>
+        {%- endunless -%}
+      {%- endfor -%}
+      <button class="flex-shrink-0 w-12 h-12 border border-foreground flex items-center justify-center self-center ml-4 hover:bg-foreground hover:text-white transition-colors">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>

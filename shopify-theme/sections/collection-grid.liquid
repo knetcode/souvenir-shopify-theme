@@ -1,0 +1,58 @@
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}
+
+<div class="px-6 pb-8">
+  <div class="container">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {%- for product in collection.products limit: section.settings.products_per_page -%}
+        <article class="group">
+          <a href="{{ product.url }}">
+            {%- if product.featured_image != blank -%}
+              <div class="relative aspect-4-3 overflow-hidden mb-4">
+                {{
+                  product.featured_image
+                  | image_url: width: 400
+                  | image_tag: loading: 'lazy', alt: product.title, class: 'object-cover transition-transform duration-300 group-hover:scale-105'
+                }}
+              </div>
+            {%- endif -%}
+            
+            {%- if product.vendor != blank -%}
+              <p class="text-xs uppercase tracking-wider text-gray mb-1">
+                {{ product.vendor }}
+              </p>
+            {%- endif -%}
+            
+            <h3 class="text-base mb-2">
+              {{ product.title }}
+            </h3>
+            
+            <span class="read-more text-sm">Read More</span>
+          </a>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    {%- if collection.products.size > section.settings.products_per_page -%}
+      <div class="text-center mt-12">
+        <a href="{{ collection.url }}" class="btn-primary">
+          View All
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

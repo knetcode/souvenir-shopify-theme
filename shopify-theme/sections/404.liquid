@@ -1,0 +1,16 @@
+{% schema %}
+{
+  "name": "404",
+  "settings": []
+}
+{% endschema %}
+
+<div class="py-16 px-6 text-center">
+  <div class="container max-w-2xl mx-auto">
+    <h1 class="text-4xl md:text-5xl mb-4">404</h1>
+    <p class="text-xl text-gray mb-8">{{ 'general.404.subtext' | t }}</p>
+    <a href="{{ routes.root_url }}" class="btn-primary">
+      {{ 'general.404.back_home' | t | default: 'Back to Home' }}
+    </a>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "accessibility": {
+      "skip_to_text": "Skip to content",
+      "refresh_page": "Choosing a selection results in a full page refresh.",
+      "link_messages": {
+        "new_window": "Opens in a new window."
+      }
+    },
+    "404": {
+      "title": "404 Page Not Found",
+      "subtext": "The page you were looking for does not exist.",
+      "back_home": "Back to Home"
+    },
+    "search": {
+      "title": "Search",
+      "placeholder": "Search...",
+      "submit": "Search"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "search": {
+      "no_results": "No results found",
+      "results_for": "Results for \"{{ terms }}\""
+    }
+  },
+  "sections": {
+    "header": {
+      "announcement": "Promotional offer or updates here just one line"
+    },
+    "footer": {
+      "newsletter": {
+        "heading": "Be in our club – sign up for news from Souvenir"
+      },
+      "membership": {
+        "heading": "Become a Member",
+        "subheading": "Discover unlimited access to Souvenir",
+        "price": "£99 / year"
+      }
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Cart",
+      "remove": "Remove",
+      "note": "Order special instructions",
+      "subtotal": "Subtotal",
+      "shipping_at_checkout": "Shipping, taxes, and discount codes calculated at checkout",
+      "update": "Update",
+      "checkout": "Checkout",
+      "continue_shopping": "Continue shopping",
+      "empty": "Your cart is currently empty."
+    }
+  }
+}

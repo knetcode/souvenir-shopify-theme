@@ -1,0 +1,36 @@
+{% schema %}
+{
+  "name": "Testimonials",
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testimonial Text"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6 border-t border-gray-100">
+  <div class="container">
+    <div class="grid md:grid-cols-3 gap-8 text-center">
+      {%- for block in section.blocks -%}
+        <div>
+          <p class="italic text-xl mb-4">{{ block.settings.text }}</p>
+          <p class="text-sm">– {{ block.settings.author }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>

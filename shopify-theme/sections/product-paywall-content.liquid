@@ -1,0 +1,169 @@
+{%- comment -%}
+  Product Paywall Content Section
+  
+  This section displays full product content (like itinerary details) only to customers
+  who have purchased the product. Used for itinerary products and other paywall content.
+{%- endcomment -%}
+
+{%- if section.settings.paywall_product_handle != blank -%}
+  {%- assign paywall_product_handle = section.settings.paywall_product_handle -%}
+{%- elsif product.handle != blank -%}
+  {%- assign paywall_product_handle = product.handle -%}
+{%- else -%}
+  {%- assign paywall_product_handle = 'premium-content-pass' -%}
+{%- endif -%}
+{%- render 'access-control', access_type: 'paywall', paywall_product_handle: paywall_product_handle -%}
+
+{%- if has_access -%}
+  <div class="product-paywall-content">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="text-2xl md:text-3xl mb-6">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    
+    {%- if section.settings.content != blank -%}
+      <div class="prose max-w-none">
+        {{ section.settings.content }}
+      </div>
+    {%- elsif product.description != blank -%}
+      <div class="prose max-w-none">
+        {{ product.description }}
+      </div>
+    {%- endif -%}
+    
+    {%- comment -%} Render blocks for additional content {%- endcomment -%}
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'richtext' -%}
+          <div class="mt-8" {{ block.shopify_attributes }}>
+            <div class="prose max-w-none">
+              {{ block.settings.content }}
+            </div>
+          </div>
+        
+        {%- when 'image' -%}
+          {%- if block.settings.image != blank -%}
+            <div class="mt-8" {{ block.shopify_attributes }}>
+              <div class="relative {% if block.settings.aspect_ratio == 'square' %}aspect-square{% elsif block.settings.aspect_ratio == 'video' %}aspect-video{% else %}aspect-4-3{% endif %} overflow-hidden">
+                {{
+                  block.settings.image
+                  | image_url: width: 1200
+                  | image_tag: loading: 'lazy', alt: block.settings.image.alt, class: 'object-cover'
+                }}
+              </div>
+            </div>
+          {%- endif -%}
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+{%- else -%}
+  <div class="product-paywall-restricted">
+    {%- if customer -%}
+      <h2 class="text-2xl md:text-3xl mb-4">Unlock Full Content</h2>
+      <p class="text-lg text-gray mb-8">{{ access_message }}</p>
+      <a href="{{ redirect_url }}" class="btn-primary">Purchase Access</a>
+    {%- else -%}
+      <h2 class="text-2xl md:text-3xl mb-4">Login Required</h2>
+      <p class="text-lg text-gray mb-8">{{ access_message }}</p>
+      <a href="{{ redirect_url }}" class="btn-primary">Log In</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-paywall-content {
+    padding: 2rem 0;
+    border-top: 1px solid var(--gray-light);
+    margin-top: 2rem;
+  }
+  
+  .product-paywall-restricted {
+    padding: 4rem 0;
+    text-align: center;
+    border-top: 1px solid var(--gray-light);
+    margin-top: 2rem;
+  }
+  
+  .product-paywall-restricted h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .product-paywall-restricted p {
+    margin-bottom: 2rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product Paywall Content",
+  "settings": [
+    {
+      "type": "text",
+      "id": "paywall_product_handle",
+      "label": "Paywall Product Handle",
+      "info": "Leave empty to use current product handle. Set to a different product handle to check for that product's purchase.",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Full Itinerary"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "info": "If empty, will use product description"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "richtext",
+      "name": "Rich Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "label": "Aspect Ratio",
+          "options": [
+            {
+              "value": "4-3",
+              "label": "4:3"
+            },
+            {
+              "value": "square",
+              "label": "Square"
+            },
+            {
+              "value": "video",
+              "label": "16:9"
+            }
+          ],
+          "default": "4-3"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Paywall Content"
+    }
+  ]
+}
+{% endschema %}

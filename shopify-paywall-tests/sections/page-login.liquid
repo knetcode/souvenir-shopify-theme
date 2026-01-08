@@ -1,0 +1,67 @@
+{% comment %}
+  Login-Protected Page Section
+  
+  This section displays content only to logged-in customers.
+  Non-logged-in users see a login prompt.
+{% endcomment %}
+
+{% render 'access-control', access_type: 'login' %}
+
+<div class="page-width">
+  {% if has_access %}
+    <div class="page-login__content">
+      <h1>{{ page.title }}</h1>
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+  {% else %}
+    <div class="page-login__restricted">
+      <h1>Login Required</h1>
+      <p>{{ access_message }}</p>
+      <a href="{{ redirect_url }}" class="button">Log In</a>
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .page-login__content {
+    padding: 2rem 0;
+  }
+  
+  .page-login__restricted {
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .page-login__restricted h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .page-login__restricted p {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .button:hover {
+    background-color: #333;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Login Protected Page",
+  "settings": []
+}
+{% endschema %}
+

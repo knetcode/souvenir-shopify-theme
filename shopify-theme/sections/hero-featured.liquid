@@ -1,0 +1,78 @@
+{% schema %}
+{
+  "name": "Hero Featured Itinerary",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Our Top Itinerary"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "THE DANISH RIVIERA"
+    },
+    {
+      "type": "text",
+      "id": "duration",
+      "label": "Duration",
+      "default": "7 days"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "There's a particular type of summer holiday that Denmark does especially well— low-key, design-forward, and ruggedly beautiful without trying too hard."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Read Itinerary"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-6 px-6">
+  <p class="text-xs uppercase tracking-wider text-gray mb-4">
+    {{ section.settings.label }}
+  </p>
+  <div class="grid md:grid-cols-2 gap-8 items-center">
+    {%- if section.settings.image != blank -%}
+      <div class="relative aspect-4-3 overflow-hidden">
+        {{
+          section.settings.image
+          | image_url: width: 800
+          | image_tag: loading: 'eager', alt: section.settings.title, class: 'object-cover'
+        }}
+      </div>
+    {%- endif -%}
+    <div class="max-w-md">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl mb-6">
+        {{ section.settings.title | newline_to_br }}
+      </h1>
+      <p class="text-lg italic mb-2">{{ section.settings.duration }}</p>
+      <p class="text-gray mb-6">
+        {{ section.settings.description }}
+      </p>
+      {%- if section.settings.link != blank -%}
+        <a href="{{ section.settings.link }}" class="read-more">
+          {{ section.settings.link_text }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>

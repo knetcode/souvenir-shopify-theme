@@ -1,0 +1,163 @@
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Bar Text",
+      "default": "Promotional offer or updates here just one line"
+    }
+  ]
+}
+{% endschema %}
+
+<header class="w-full">
+  {%- if section.settings.announcement_text != blank -%}
+    <div class="bg-pink text-center py-2 px-4 text-sm">
+      <p>{{ section.settings.announcement_text }}</p>
+    </div>
+  {%- endif -%}
+
+  <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+    {%- comment -%} Left Navigation {%- endcomment -%}
+    <div class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wide">
+      {%- for link in linklists.main-menu.links -%}
+        <a href="{{ link.url }}" class="hover:opacity-70 transition-opacity">
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Mobile Menu Button {%- endcomment -%}
+    <button
+      class="md:hidden p-2 mobile-menu-toggle"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        class="menu-icon"
+      >
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        class="close-icon hidden"
+      >
+        <path d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    {%- comment -%} Logo {%- endcomment -%}
+    <a href="{{ routes.root_url }}" class="absolute left-1/2 -translate-x-1/2 text-2xl md:text-3xl tracking-wider">
+      {{ shop.name | default: 'SOUVENIR' }}
+    </a>
+
+    {%- comment -%} Right Navigation {%- endcomment -%}
+    <div class="flex items-center gap-4 text-sm uppercase tracking-wide">
+      {%- if customer -%}
+        <a href="{{ routes.account_url }}" class="hidden sm:block hover:opacity-70 transition-opacity">
+          Account
+        </a>
+      {%- else -%}
+        <a href="{{ routes.account_login_url }}" class="hidden sm:block hover:opacity-70 transition-opacity">
+          Login
+        </a>
+      {%- endif -%}
+      
+      <button aria-label="Search" class="p-2 hover:opacity-70 transition-opacity" onclick="document.getElementById('search').focus()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8" />
+          <path d="M21 21l-4.35-4.35" />
+        </svg>
+      </button>
+      
+      <a href="{{ routes.cart_url }}" class="p-2 hover:opacity-70 transition-opacity relative">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <path d="M3 6h18" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+        {%- if cart.item_count > 0 -%}
+          <span class="absolute -top-1 -right-1 bg-foreground text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {{ cart.item_count }}
+          </span>
+        {%- endif -%}
+      </a>
+    </div>
+  </nav>
+
+  {%- comment -%} Mobile Menu {%- endcomment -%}
+  <div class="md:hidden bg-white border-b border-gray-100 py-4 mobile-menu hidden">
+    <div class="flex flex-col items-center gap-4 text-sm uppercase tracking-wide">
+      {%- for link in linklists.main-menu.links -%}
+        <a
+          href="{{ link.url }}"
+          class="hover:opacity-70 transition-opacity"
+        >
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+      {%- unless customer -%}
+        <a
+          href="{{ routes.account_login_url }}"
+          class="hover:opacity-70 transition-opacity"
+        >
+          Login
+        </a>
+      {%- endunless -%}
+    </div>
+  </div>
+</header>
+
+<style>
+  .mobile-menu-toggle {
+    position: relative;
+  }
+  
+  .mobile-menu-toggle .menu-icon,
+  .mobile-menu-toggle .close-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .mobile-menu-toggle[aria-expanded="true"] .menu-icon {
+    display: none;
+  }
+  
+  .mobile-menu-toggle[aria-expanded="true"] .close-icon {
+    display: block;
+  }
+  
+  .mobile-menu-toggle .close-icon {
+    display: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const menu = document.querySelector('.mobile-menu');
+    
+    if (toggle && menu) {
+      toggle.addEventListener('click', function() {
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', !isExpanded);
+        menu.classList.toggle('hidden');
+      });
+    }
+  });
+</script>

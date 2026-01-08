@@ -1,0 +1,37 @@
+{% schema %}
+{
+  "name": "About Content",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6">
+  <div class="container">
+    <div class="grid md:grid-cols-2 gap-12 items-start">
+      {%- if section.settings.image != blank -%}
+        <div class="relative aspect-square overflow-hidden">
+          {{
+            section.settings.image
+            | image_url: width: 800
+            | image_tag: loading: 'lazy', alt: 'About Souvenir', class: 'object-cover'
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="space-y-6">
+        {{ section.settings.content }}
+      </div>
+    </div>
+  </div>
+</section>

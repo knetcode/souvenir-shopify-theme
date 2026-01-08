@@ -1,0 +1,41 @@
+{% schema %}
+{
+  "name": "Collection Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="py-8 px-6">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="mb-8">
+        <h1 class="text-3xl uppercase tracking-wide mb-2">{{ section.settings.heading }}</h1>
+        {%- if section.settings.subheading != blank -%}
+          <p class="text-gray">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.description != blank -%}
+      <p class="text-gray max-w-2xl mb-12">
+        {{ section.settings.description }}
+      </p>
+    {%- endif -%}
+  </div>
+</div>

@@ -1,0 +1,64 @@
+{%- comment -%}
+  Card snippet for displaying content cards
+  
+  Parameters:
+  - image: Image object or URL
+  - title: Card title
+  - description: Optional description
+  - category: Optional category label
+  - href: Link URL
+  - variant: Size variant (default, small, large)
+{%- endcomment -%}
+
+{%- assign variant = variant | default: 'default' -%}
+{%- assign size_classes = 'aspect-4-5' -%}
+{%- if variant == 'small' -%}
+  {%- assign size_classes = 'aspect-square' -%}
+{%- elsif variant == 'large' -%}
+  {%- assign size_classes = 'aspect-3-4' -%}
+{%- endif -%}
+
+<a href="{{ href }}" class="card group block">
+  {%- if image != blank -%}
+    <div class="relative {{ size_classes }} overflow-hidden mb-4">
+      {%- if image contains 'http' -%}
+        <img src="{{ image }}" alt="{{ title }}" class="card-image object-cover">
+      {%- else -%}
+        {{
+          image
+          | image_url: width: 400
+          | image_tag: loading: 'lazy', alt: title, class: 'card-image object-cover'
+        }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  
+  {%- if category != blank -%}
+    <p class="text-xs uppercase tracking-wider text-gray mb-1">
+      {{ category }}
+    </p>
+  {%- endif -%}
+  
+  <h3 class="text-lg mb-2 group-hover:opacity-70 transition-opacity">
+    {{ title }}
+  </h3>
+  
+  {%- if description != blank -%}
+    <p class="text-sm text-gray line-clamp-2">{{ description }}</p>
+  {%- endif -%}
+  
+  <span class="read-more mt-3 inline-block">Read More</span>
+</a>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .aspect-3-4 {
+    aspect-ratio: 3 / 4;
+  }
+</style>

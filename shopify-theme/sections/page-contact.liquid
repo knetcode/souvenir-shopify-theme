@@ -1,0 +1,42 @@
+{% schema %}
+{
+  "name": "Contact Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CONTACT"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We love to hear from you!"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_info",
+      "label": "Contact Information"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="text-3xl mb-8">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    
+    {%- if section.settings.subheading != blank -%}
+      <p class="text-lg mb-8">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+    
+    {%- if section.settings.contact_info != blank -%}
+      <div class="space-y-4 text-gray">
+        {{ section.settings.contact_info }}
+      </div>
+    {%- endif -%}
+  </div>
+</section>

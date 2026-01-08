@@ -1,0 +1,56 @@
+{% schema %}
+{
+  "name": "Product Related",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Other Souvenirs..."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ]
+}
+{% endschema %}
+
+{%- if section.settings.collection != blank -%}
+  <section class="py-12 border-t border-gray-100">
+    <div class="container">
+      <h2 class="text-2xl mb-8 uppercase tracking-wide">{{ section.settings.heading }}</h2>
+
+      <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+        {%- for product in collections[section.settings.collection].products limit: 4 -%}
+          <div class="flex-shrink-0 w-64 snap-start">
+            <a href="{{ product.url }}">
+              {%- if product.featured_image != blank -%}
+                <div class="relative aspect-square overflow-hidden mb-4 bg-pink">
+                  {{
+                    product.featured_image
+                    | image_url: width: 400
+                    | image_tag: loading: 'lazy', alt: product.title, class: 'object-cover'
+                  }}
+                </div>
+              {%- endif -%}
+              {%- if product.type != blank -%}
+                <p class="text-xs uppercase tracking-wider text-gray mb-1">
+                  {{ product.type }}
+                </p>
+              {%- endif -%}
+              <h3 class="text-base mb-2">{{ product.title }}</h3>
+              <span class="read-more text-sm">Discover</span>
+            </a>
+          </div>
+        {%- endfor -%}
+        <button class="flex-shrink-0 w-12 h-12 border border-foreground flex items-center justify-center self-center ml-4 hover:bg-foreground hover:text-white transition-colors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+{%- endif -%}

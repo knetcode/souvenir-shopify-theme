@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "article": {
+      "type": "article-main",
+      "settings": {}
+    },
+    "article_related": {
+      "type": "article-related",
+      "settings": {}
+    }
+  },
+  "order": ["article", "article_related"]
+}

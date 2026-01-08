@@ -1,0 +1,33 @@
+{% comment %}
+  Paywall-Protected Page Template
+  This template can be selected when creating/editing pages in Shopify Admin
+{% endcomment %}
+
+{% layout 'theme' %}
+
+{% assign paywall_product_handle = 'premium-content-pass' %}
+{% render 'access-control', access_type: 'paywall', paywall_product_handle: paywall_product_handle %}
+
+<div class="page-width" style="padding: 4rem 0;">
+  {% if has_access %}
+    <div class="page-paywall__content">
+      <h1>{{ page.title }}</h1>
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+  {% else %}
+    <div class="page-paywall__restricted" style="text-align: center; padding: 4rem 0;">
+      {% if customer %}
+        <h1>Unlock This Content</h1>
+        <p style="font-size: 1.1rem; margin: 2rem 0;">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="button" style="display: inline-block; padding: 0.75rem 2rem; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px;">Purchase Premium Pass</a>
+      {% else %}
+        <h1>Login Required</h1>
+        <p style="font-size: 1.1rem; margin: 2rem 0;">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="button" style="display: inline-block; padding: 0.75rem 2rem; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px;">Log In</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+

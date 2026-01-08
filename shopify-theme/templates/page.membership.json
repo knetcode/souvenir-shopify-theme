@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "membership": {
+      "type": "page-membership",
+      "settings": {
+        "membership_tag": "member-active"
+      }
+    }
+  },
+  "order": ["membership"]
+}

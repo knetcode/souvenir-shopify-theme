@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "newsletter_heading": "Be in our club – sign up for news from Souvenir",
+        "membership_heading": "Become a Member",
+        "membership_subheading": "Discover unlimited access to Souvenir",
+        "membership_price": "£99 / year"
+      }
+    }
+  },
+  "order": ["footer"]
+}
