@@ -1,7 +1,15 @@
 {% schema %}
 {
   "name": "Product Main",
-  "settings": {}
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "free_mode",
+      "label": "Free Mode (MVP)",
+      "default": true,
+      "info": "When enabled, hides add to cart button and shows price as FREE. Easy to disable later to enable payments."
+    }
+  ]
 }
 {% endschema %}
 
@@ -30,7 +38,7 @@
             }}
           </div>
         {%- endif -%}
-        
+
         {%- if product.images.size > 1 -%}
           <div class="flex gap-2">
             {%- for image in product.images limit: 5 -%}
@@ -57,71 +65,96 @@
             {{ product.vendor }}
           </p>
         {%- endif -%}
-        <p class="text-2xl mb-6">{{ product.price | money }}</p>
 
-        {% form 'product', product, id: 'product-form' %}
-          {%- comment -%} Variants {%- endcomment -%}
-          {%- unless product.has_only_default_variant -%}
-            {%- for option in product.options_with_values -%}
-              <div class="mb-6">
-                <p class="text-sm uppercase tracking-wide mb-3">{{ option.name }}</p>
-                <div class="flex gap-3">
-                  {%- for value in option.values -%}
-                    <input
-                      type="radio"
-                      id="option-{{ option.position }}-{{ forloop.index0 }}"
-                      name="options[{{ option.name }}]"
-                      value="{{ value }}"
-                      {% if option.selected_value == value %}checked{% endif %}
-                      class="variant-option"
-                    >
-                    <label
-                      for="option-{{ option.position }}-{{ forloop.index0 }}"
-                      class="variant-label"
-                    >
-                      {{ value }}
-                    </label>
-                  {%- endfor -%}
-                </div>
-              </div>
-            {%- endfor -%}
-          {%- endunless -%}
-
-          {%- comment -%} Quantity {%- endcomment -%}
-          <div class="mb-6">
-            <p class="text-sm uppercase tracking-wide mb-3">Qty</p>
-            <div class="flex items-center gap-4">
-              <button
-                type="button"
-                class="w-8 h-8 border border-gray-300 flex items-center justify-center hover:border-foreground quantity-decrease"
-              >
-                -
-              </button>
-              <input
-                type="number"
-                name="quantity"
-                value="1"
-                min="1"
-                class="quantity-input text-center w-12"
-                id="quantity"
-              >
-              <button
-                type="button"
-                class="w-8 h-8 border border-gray-300 flex items-center justify-center hover:border-foreground quantity-increase"
-              >
-                +
-              </button>
+        {%- comment -%} Price Display - Free Mode or Regular {%- endcomment -%}
+        <div class="mb-6">
+          {%- if section.settings.free_mode -%}
+            {%- comment -%} FREE MODE: Show crossed-out price with FREE label {%- endcomment -%}
+            <div class="flex items-center gap-3">
+              <p style="text-decoration: line-through" class="text-2xl line-through text-gray">
+                {{ product.price | money }}
+              </p>
+              <span class="text-2xl font-bold">FREE</span>
             </div>
-          </div>
+          {%- else -%}
+            {%- comment -%} REGULAR MODE: Show normal price {%- endcomment -%}
+            <p class="text-2xl">{{ product.price | money }}</p>
+          {%- endif -%}
+        </div>
 
-          {%- comment -%} Add to Cart {%- endcomment -%}
-          <button
-            type="submit"
-            class="w-full bg-foreground text-white py-4 text-sm uppercase tracking-wide hover:bg-transparent hover:text-foreground border border-foreground transition-colors mb-8"
-          >
-            Add to Cart
-          </button>
-        {% endform %}
+        {%- comment -%} Product Form - Only show if NOT in free mode {%- endcomment -%}
+        {%- unless section.settings.free_mode -%}
+          {% form 'product', product, id: 'product-form' %}
+            {%- comment -%} Variants {%- endcomment -%}
+            {%- unless product.has_only_default_variant -%}
+              {%- for option in product.options_with_values -%}
+                <div class="mb-6">
+                  <p class="text-sm uppercase tracking-wide mb-3">{{ option.name }}</p>
+                  <div class="flex gap-3">
+                    {%- for value in option.values -%}
+                      <input
+                        type="radio"
+                        id="option-{{ option.position }}-{{ forloop.index0 }}"
+                        name="options[{{ option.name }}]"
+                        value="{{ value }}"
+                        {% if option.selected_value == value %}
+                          checked
+                        {% endif %}
+                        class="variant-option"
+                      >
+                      <label
+                        for="option-{{ option.position }}-{{ forloop.index0 }}"
+                        class="variant-label"
+                      >
+                        {{ value }}
+                      </label>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endunless -%}
+
+            {%- comment -%} Quantity {%- endcomment -%}
+            <div class="mb-6">
+              <p class="text-sm uppercase tracking-wide mb-3">Qty</p>
+              <div class="flex items-center gap-4">
+                <button
+                  type="button"
+                  class="w-8 h-8 border border-gray-300 flex items-center justify-center hover:border-foreground quantity-decrease"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  class="quantity-input text-center w-12"
+                  id="quantity"
+                >
+                <button
+                  type="button"
+                  class="w-8 h-8 border border-gray-300 flex items-center justify-center hover:border-foreground quantity-increase"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {%- comment -%} Add to Cart Button {%- endcomment -%}
+            <button
+              type="submit"
+              class="w-full bg-foreground text-white py-4 text-sm uppercase tracking-wide hover:bg-transparent hover:text-foreground border border-foreground transition-colors mb-8"
+            >
+              Add to Cart
+            </button>
+          {% endform %}
+        {%- else -%}
+          {%- comment -%} FREE MODE: Show message instead of form {%- endcomment -%}
+          <div class="mb-8 p-4 bg-gray-50 border border-gray-200">
+            <p class="text-sm text-gray-600">This itinerary is currently available for free during our MVP launch.</p>
+          </div>
+        {%- endunless -%}
 
         {%- comment -%} Product Description {%- endcomment -%}
         {%- if product.description != blank -%}
@@ -135,12 +168,12 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const thumbnails = document.querySelectorAll('.product-thumbnail');
     const mainImage = document.getElementById('product-image-main');
-    
-    thumbnails.forEach(thumb => {
-      thumb.addEventListener('click', function() {
+
+    thumbnails.forEach((thumb) => {
+      thumb.addEventListener('click', function () {
         const imageUrl = this.getAttribute('data-image-url');
         if (mainImage && imageUrl) {
           mainImage.src = imageUrl;
@@ -153,14 +186,14 @@
     const increaseBtn = document.querySelector('.quantity-increase');
 
     if (decreaseBtn && quantityInput) {
-      decreaseBtn.addEventListener('click', function() {
+      decreaseBtn.addEventListener('click', function () {
         const current = parseInt(quantityInput.value) || 1;
         quantityInput.value = Math.max(1, current - 1);
       });
     }
 
     if (increaseBtn && quantityInput) {
-      increaseBtn.addEventListener('click', function() {
+      increaseBtn.addEventListener('click', function () {
         const current = parseInt(quantityInput.value) || 1;
         quantityInput.value = current + 1;
       });
@@ -172,7 +205,7 @@
   .variant-option {
     display: none;
   }
-  
+
   .variant-label {
     display: inline-block;
     padding: 0.5rem 1rem;
@@ -180,20 +213,20 @@
     cursor: pointer;
     transition: border-color 0.2s;
   }
-  
+
   .variant-option:checked + .variant-label,
   .variant-label:hover {
     border-color: var(--foreground);
   }
-  
+
   .w-full {
     width: 100%;
   }
-  
+
   .w-12 {
     width: 3rem;
   }
-  
+
   .h-8 {
     height: 2rem;
   }

@@ -4,16 +4,10 @@
       "type": "product-main",
       "settings": {}
     },
-    "itinerary_paywall": {
-      "type": "itinerary-paywall",
-      "settings": {
-        "heading": "Full Itinerary"
-      }
-    },
     "product_related": {
       "type": "product-related",
       "settings": {}
     }
   },
-  "order": ["product", "itinerary_paywall", "product_related"]
+  "order": ["product", "product_related"]
 }

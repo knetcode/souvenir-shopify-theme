@@ -1,109 +1,105 @@
 {%- comment -%}
   Itinerary Paywall Section
-  
+
+  ⚠️ PAYWALL DISABLED ⚠️
+  This section is currently disabled in product templates.
+  To re-enable: See RE_ENABLE_PAYWALL.md
+
   This section displays full itinerary content only to customers who have purchased
   the itinerary product. Shows preview content for non-purchasers.
 {%- endcomment -%}
 
-{%- if section.settings.paywall_product_handle != blank -%}
-  {%- assign paywall_product_handle = section.settings.paywall_product_handle -%}
-{%- elsif product.handle != blank -%}
-  {%- assign paywall_product_handle = product.handle -%}
-{%- else -%}
-  {%- assign paywall_product_handle = 'premium-content-pass' -%}
-{%- endif -%}
+{%- assign paywall_product_handle = section.settings.paywall_product_handle | default: product.handle -%}
 {%- render 'access-control', access_type: 'paywall', paywall_product_handle: paywall_product_handle -%}
 
-<div class="container">
-  {%- if has_access -%}
-    {%- comment -%} Full itinerary content {%- endcomment -%}
-    <div class="itinerary-paywall-content">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="text-2xl md:text-3xl mb-8">{{ section.settings.heading }}</h2>
-      {%- endif -%}
-      
-      {%- if section.settings.full_content != blank -%}
-        <div class="prose max-w-none space-y-6">
-          {{ section.settings.full_content }}
-        </div>
-      {%- elsif product.description != blank -%}
-        <div class="prose max-w-none space-y-6">
-          {{ product.description }}
-        </div>
-      {%- endif -%}
-      
-      {%- comment -%} Day-by-day itinerary blocks {%- endcomment -%}
-      {%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when 'day' -%}
-            <div class="itinerary-day mt-12" {{ block.shopify_attributes }}>
-              <h3 class="text-xl md:text-2xl mb-4">{{ block.settings.day_title }}</h3>
-              {%- if block.settings.content != blank -%}
-                <div class="prose max-w-none text-gray">
-                  {{ block.settings.content }}
-                </div>
-              {%- endif -%}
-              {%- if block.settings.image != blank -%}
-                <div class="mt-6 relative aspect-4-3 overflow-hidden">
-                  {{
-                    block.settings.image
-                    | image_url: width: 800
-                    | image_tag: loading: 'lazy', alt: block.settings.day_title, class: 'object-cover'
-                  }}
-                </div>
-              {%- endif -%}
-            </div>
-        {%- endcase -%}
-      {%- endfor -%}
-    </div>
-  {%- else -%}
-    {%- comment -%} Preview content for non-purchasers {%- endcomment -%}
-    <div class="itinerary-paywall-preview">
-      {%- if section.settings.preview_content != blank -%}
-        <div class="prose max-w-none space-y-6 mb-12">
-          {{ section.settings.preview_content }}
-        </div>
-      {%- elsif product.description != blank -%}
-        {%- comment -%} Show first paragraph or truncated description {%- endcomment -%}
-        <div class="prose max-w-none space-y-6 mb-12">
-          {{ product.description | truncatewords: 100 }}
-        </div>
-      {%- endif -%}
-      
-      {%- comment -%} Paywall CTA {%- endcomment -%}
-      <div class="itinerary-paywall-cta text-center py-12 border-t border-gray-100">
-        {%- if customer -%}
-          <h2 class="text-2xl md:text-3xl mb-4">Get the Full Itinerary</h2>
-          <p class="text-lg text-gray mb-8">{{ access_message }}</p>
-          <a href="{{ redirect_url }}" class="btn-primary">Purchase Access</a>
-        {%- else -%}
-          <h2 class="text-2xl md:text-3xl mb-4">Login Required</h2>
-          <p class="text-lg text-gray mb-8">{{ access_message }}</p>
-          <a href="{{ redirect_url }}" class="btn-primary">Log In</a>
-        {%- endif -%}
+{%- if has_access -%}
+  {%- comment -%} Full itinerary content {%- endcomment -%}
+  <div class="itinerary-paywall-content">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="text-2xl md:text-3xl mb-8">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.full_content != blank -%}
+      <div class="prose max-w-none space-y-6">
+        {{ section.settings.full_content }}
       </div>
+    {%- elsif product.description != blank -%}
+      <div class="prose max-w-none space-y-6">
+        {{ product.description }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Day-by-day itinerary blocks {%- endcomment -%}
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'day' -%}
+          <div class="itinerary-day mt-12" {{ block.shopify_attributes }}>
+            <h3 class="text-xl md:text-2xl mb-4">{{ block.settings.day_title }}</h3>
+            {%- if block.settings.content != blank -%}
+              <div class="prose max-w-none text-gray">
+                {{ block.settings.content }}
+              </div>
+            {%- endif -%}
+            {%- if block.settings.image != blank -%}
+              <div class="mt-6 relative aspect-4-3 overflow-hidden">
+                {{
+                  block.settings.image
+                  | image_url: width: 800
+                  | image_tag: loading: 'lazy', alt: block.settings.day_title, class: 'object-cover'
+                }}
+              </div>
+            {%- endif -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+{%- else -%}
+  {%- comment -%} Preview content for non-purchasers {%- endcomment -%}
+  <div class="itinerary-paywall-preview">
+    {%- if section.settings.preview_content != blank -%}
+      <div class="prose max-w-none space-y-6 mb-12">
+        {{ section.settings.preview_content }}
+      </div>
+    {%- elsif product.description != blank -%}
+      {%- comment -%} Show first paragraph or truncated description {%- endcomment -%}
+      <div class="prose max-w-none space-y-6 mb-12">
+        {{ product.description | truncatewords: 100 }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Paywall CTA {%- endcomment -%}
+    <div class="itinerary-paywall-cta text-center py-12 border-t border-gray-100">
+      {%- if customer -%}
+        <h2 class="text-2xl md:text-3xl mb-4">Get the Full Itinerary</h2>
+        <p class="text-lg text-gray mb-8">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="btn-primary">Purchase Access</a>
+      {%- else -%}
+        <h2 class="text-2xl md:text-3xl mb-4">Login Required</h2>
+        <p class="text-lg text-gray mb-8">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="btn-primary">Log In</a>
+      {%- endif -%}
     </div>
-  {%- endif -%}
-</div>
+  </div>
+{%- endif -%}
 
 {% stylesheet %}
   .itinerary-paywall-content {
     padding: 2rem 0;
   }
-  
+
   .itinerary-paywall-preview {
     padding: 2rem 0;
   }
-  
+
   .itinerary-paywall-cta {
     margin-top: 3rem;
   }
-  
+
   .itinerary-day {
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--gray-light);
   }
-  
+
   .itinerary-day:last-child {
     border-bottom: none;
   }
@@ -117,8 +113,7 @@
       "type": "text",
       "id": "paywall_product_handle",
       "label": "Paywall Product Handle",
-      "info": "Leave empty to use current product handle",
-      "default": ""
+      "info": "Leave empty to use current product handle"
     },
     {
       "type": "text",

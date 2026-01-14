@@ -21,7 +21,7 @@ A Shopify theme converted from the Next.js version, featuring a modern design fo
 - Product pages with variant selection
 - Newsletter signup in footer
 - Membership promotion section
-- **Paywall system** for premium content (itineraries, articles, etc.)
+- **Paywall system** (currently disabled, can be re-enabled - see `RE_ENABLE_PAYWALL.md`)
   - Login-protected pages
   - One-off paywall (product purchase required)
   - Membership-protected content
@@ -41,23 +41,21 @@ A Shopify theme converted from the Next.js version, featuring a modern design fo
 5. Create pages:
    - About page (use template `page.about`)
    - Editions page (use template `page.editions`)
-6. **Set up paywall system** (see `PAYWALL_SETUP.md` for detailed instructions):
-   - Create paywall products for itineraries
-   - Create membership product
-   - Configure access control settings
-7. Customize colors, fonts, and content via the theme customizer
+6. Customize colors, fonts, and content via the theme customizer
+
+**Note:** Paywall functionality is currently disabled. All content is public. To re-enable paywalls later, see `RE_ENABLE_PAYWALL.md`.
 
 ## Templates
 
 - `index.json` - Homepage
 - `page.about.json` - About page
 - `page.editions.json` - Editions page
-- `page.paywall.json` - Paywall-protected pages
-- `page.login.json` - Login-protected pages
-- `page.membership.json` - Membership-protected pages
+- `page.paywall.json` - Paywall-protected pages (disabled - see `RE_ENABLE_PAYWALL.md`)
+- `page.login.json` - Login-protected pages (disabled - see `RE_ENABLE_PAYWALL.md`)
+- `page.membership.json` - Membership-protected pages (disabled - see `RE_ENABLE_PAYWALL.md`)
 - `collection.itineraries.json` - Itineraries collection
 - `product.json` - Product pages
-- `product.itinerary.json` - Itinerary products with paywall
+- `product.itinerary.json` - Itinerary products (paywall disabled - see `RE_ENABLE_PAYWALL.md`)
 - `blog.json` - Blog listing
 - `article.json` - Article/blog post pages
 
@@ -81,14 +79,19 @@ Or upload via the Shopify admin theme editor.
 
 1. **`COMPLETE_SETUP_GUIDE.md`** - Comprehensive step-by-step guide from zero to live
    - Perfect for React developers new to Shopify
-   - Covers everything: upload, content, paywalls, testing
+   - Covers everything: upload, content, testing
    - Includes troubleshooting
+   - **Note:** Paywall steps removed (currently disabled)
 
 2. **`QUICK_START.md`** - Condensed checklist version
    - Quick reference for experienced developers
    - Checklist format for fast setup
 
-3. **`PAYWALL_SETUP.md`** - Detailed paywall configuration
+3. **`RE_ENABLE_PAYWALL.md`** - How to re-enable paywall system
+   - Quick guide to restore paywall functionality
+   - All paywall code is preserved, just needs to be activated
+
+4. **`PAYWALL_SETUP.md`** - Detailed paywall configuration (for when re-enabled)
    - How to set up access control
    - Testing paywalls
    - Membership setup
@@ -98,3 +101,8 @@ Or upload via the Shopify admin theme editor.
 1. Read `COMPLETE_SETUP_GUIDE.md` for full instructions
 2. Or use `QUICK_START.md` for a quick checklist
 3. Refer to `PAYWALL_SETUP.md` when configuring access control
+
+**⚠️ Browser Note:** The Shopify theme editor ("Edit theme") does **not work in Firefox**. Use Chrome
+
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse purus augue, sodales a aliquet a, maximus ut lorem. Nunc metus metus, sollicitudin sed auctor ac, tempus at erat. Aliquam est diam, tempus non rhoncus sed, consequat id augue. Quisque varius sollicitudin risus, ac aliquam urna vulputate tincidunt. Proin sit amet lacus nec felis pharetra malesuada et non neque. Fusce sed porttitor diam. Integer ac bibendum est. Nunc luctus ullamcorper arcu, eget tincidunt tortor laoreet vitae. Sed dictum mauris at tristique vehicula.

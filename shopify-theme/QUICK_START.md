@@ -2,6 +2,8 @@
 
 A condensed checklist for getting the theme live. See `COMPLETE_SETUP_GUIDE.md` for detailed instructions.
 
+**⚠️ Important:** The Shopify theme editor does **not work in Firefox**. Use Chrome
+
 ## 🚀 Setup (30 min)
 
 - [ ] Install Shopify CLI: `npm install -g @shopify/cli @shopify/theme`
@@ -17,12 +19,14 @@ A condensed checklist for getting the theme live. See `COMPLETE_SETUP_GUIDE.md` 
 - [ ] Create "Shop" collection
 
 ### Blogs
+- [ ] Go to **Content** → **Blog posts** → **Manage blogs** (or `/admin/blogs`)
 - [ ] Create "Food, Culture, Life" blog
 - [ ] Create "The Interview" blog
 
 ### Navigation
-- [ ] Set up Main menu (Itineraries, Editions, People, About)
-- [ ] Set up Footer menu (all footer links)
+- [ ] Go to **Content** → **Menus** (or `/admin/menus`)
+- [ ] Create/Edit **Main menu** (Itineraries, Editions, People, About)
+- [ ] Create/Edit **Footer menu** (all footer links)
 
 ### Pages
 - [ ] Create About page (template: `page.about`)
@@ -47,6 +51,7 @@ For each itinerary from PDF:
 ## 📝 Add Content (1 hour)
 
 ### Blog Posts
+- [ ] Go to **Content** → **Blog posts** → **Add blog post** (or `/admin/blogs`)
 - [ ] Add articles to "Food, Culture, Life" blog
 - [ ] Add interviews to "The Interview" blog
 - [ ] Add featured images
@@ -59,19 +64,11 @@ For each itinerary from PDF:
 - [ ] Configure categories
 - [ ] Configure membership promo
 
-## 🔒 Configure Paywalls (30 min)
+## 🔒 Paywalls (Currently Disabled)
 
-### Test Setup
-- [ ] Create test customer
-- [ ] Create test order with itinerary product
-- [ ] Mark order as Paid & Fulfilled
-- [ ] Test: Log out → Visit itinerary → See preview
-- [ ] Test: Log in → Visit itinerary → See full content
+**Note:** Paywall functionality is currently disabled. All content is public.
 
-### Membership (if using)
-- [ ] Create membership product
-- [ ] Tag test customer with `member-active`
-- [ ] Test membership-protected pages
+To re-enable paywalls later, see `RE_ENABLE_PAYWALL.md`.
 
 ## ✅ Final Steps (30 min)
 
@@ -85,9 +82,9 @@ For each itinerary from PDF:
 ## 📋 Client Handoff
 
 - [ ] Show client how to:
-  - [ ] Edit homepage (Themes → Customize)
+  - [ ] Edit homepage (Themes → Edit theme)
   - [ ] Add products (Products → Add product)
-  - [ ] Add blog posts (Blog posts → Add blog post)
+  - [ ] Add blog posts (Content → Blog posts → Add blog post)
   - [ ] Manage orders (Orders → View orders)
 - [ ] Provide simple documentation
 
@@ -115,7 +112,7 @@ shopify theme list
 - **Products:** Admin → Products
 - **Collections:** Admin → Products → Collections
 - **Pages:** Admin → Online Store → Pages
-- **Blogs:** Admin → Online Store → Blog posts
+- **Blogs:** Admin → Content → Blog posts (or `/admin/blogs`)
 
 ## Common Tasks
 
@@ -123,17 +120,12 @@ shopify theme list
 1. Products → Add product
 2. Fill details, set as digital
 3. Add to "Itineraries" collection
-4. Themes → Customize → Product page → Change template to `product.itinerary`
-5. Add full content in "Itinerary Paywall" section
+4. Add all content in product description (paywall disabled, so all content is public)
+5. Optional: Change template to `product.itinerary` for different layout
 
 **Edit Homepage:**
-1. Themes → Customize
+1. Themes → Edit theme (or "..." → Edit default theme content)
 2. Click any section to edit
-3. Save
+3. Save (top right)
 
-**Test Paywall:**
-1. Create order with product
-2. Assign to customer
-3. Mark Paid & Fulfilled
-4. Log in as customer
-5. Visit product page
+**Note:** Paywall testing not needed - paywalls are disabled. All content is public.

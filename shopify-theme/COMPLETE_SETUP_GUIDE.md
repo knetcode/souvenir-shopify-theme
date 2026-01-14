@@ -8,9 +8,14 @@ This guide walks you through setting up the Souvenir theme from scratch, even if
 1. Upload the theme to Shopify
 2. Create the structure (collections, products, pages, blogs)
 3. Add content from PDFs
-4. Configure paywalls
-5. Test everything
-6. Hand off to client
+4. Test everything
+5. Hand off to client
+
+**Notes:**
+- **Paywall functionality** is currently disabled but can be re-enabled later. See `RE_ENABLE_PAYWALL.md` for instructions.
+- **Free Mode (MVP):** Itineraries are set to display as FREE with hidden add-to-cart buttons. This can be easily disabled later to enable payments. See Step 11 for details.
+
+**⚠️ Important:** The Shopify theme editor ("Edit theme") does **not work in Firefox**. Use Chrome
 
 **Time estimate:** 4-6 hours for initial setup
 
@@ -84,8 +89,10 @@ Collections are like categories. You need:
 1. **Itineraries Collection**
    - Go to Shopify Admin → **Products** → **Collections** → **Create collection**
    - Name: `Itineraries`
-   - Handle: `itineraries` (auto-generated, but verify)
+   - Handle: `itineraries` (auto-generated, but **VERIFY** - this must match the menu link)
    - Description: "Detailed travel itineraries"
+   - **Theme template:** Leave as "Default collection" (or select "itineraries" if you want the custom layout)
+   - **Important:** After saving, check the collection URL - it should be `/collections/itineraries`
    - Save
 
 2. **Shop/Souvenirs Collection**
@@ -99,8 +106,9 @@ Collections are like categories. You need:
 Blogs are for articles and interviews:
 
 1. **Food, Culture, Life Blog**
-   - Go to **Online Store** → **Blog posts** → **Manage blogs**
-   - Click **Add blog**
+   - Go to **Content** → **Blog posts** (or navigate directly to `/admin/blogs`)
+   - Click **Manage blogs** (or look for blog management option)
+   - Click **Add blog** (or **Create blog**)
    - Title: `Food, Culture, Life`
    - Handle: `food-culture-life` (verify)
    - Save
@@ -111,34 +119,64 @@ Blogs are for articles and interviews:
    - Handle: `the-interview` (verify)
    - Save
 
+**Note:** In newer Shopify admin interfaces, blogs may be under **Content** → **Blog posts** instead of **Online Store**. If you don't see it, try the direct URL: `https://your-store.myshopify.com/admin/blogs`
+
 ### Step 8: Create Navigation Menus
 
-1. **Main Menu**
-   - Go to **Online Store** → **Navigation**
-   - Click **Main menu** (or create if doesn't exist)
+**Note:** You can set up navigation menus now, but you'll need to create the pages first (Step 9) before the links will work. You can either:
+- **Option A:** Create pages first (Step 9), then come back here to add navigation
+- **Option B:** Set up navigation now with manual URLs, then create pages later
+
+Navigation menus are managed in **Content → Menus**:
+
+1. **Go to Content → Menus**
+   - In the left sidebar, click **Content**
+   - Click **Menus**
+   - Or go directly to: `https://your-store.myshopify.com/admin/menus`
+
+2. **Create/Edit Main Menu**
+   - Click **Main menu** (or **Create menu** if it doesn't exist)
+   - If creating new, name it: `Main menu`
    - Add menu items:
-     - Itineraries → Link to `/collections/itineraries`
-     - Editions → Link to `/pages/editions`
-     - People → Link to `/blogs/the-interview`
-     - About → Link to `/pages/about`
+     - Click **Add menu item**
+     - **Itineraries** → In the Link field, type: `/collections/itineraries`
+       - **Important:** This links to the COLLECTION page (shows all itineraries), not a specific product
+       - Make sure you created the "Itineraries" collection in Step 6
+       - The collection handle must be exactly `itineraries` (check in Collections → Itineraries → URL)
+     - **Editions** → In the Link field, type: `/pages/editions` (page - create in Step 9)
+     - **People** → In the Link field, type: `/blogs/the-interview` (blog - create in Step 7)
+     - **About** → In the Link field, type: `/pages/about` (page - create in Step 9)
+   - **Note:** If pages/collections don't exist yet, you can manually type the URLs in the Link field. The search won't find them, but you can paste/type the URL directly.
    - Save
 
-2. **Footer Menu**
-   - Create or edit **Footer** menu
-   - Add links:
-     - Subscriptions → `/pages/subscriptions`
-     - Contact → `/pages/contact`
-     - Advertising → `/pages/advertising`
-     - Privacy → `/pages/privacy`
-     - Shipping & Returns → `/pages/shipping-returns`
-     - Terms of Service → `/pages/terms`
+3. **Create/Edit Footer Menu**
+   - Click **Footer menu** (or **Create menu** if it doesn't exist)
+   - If creating new, name it: `Footer menu`
+   - Add menu items:
+     - Click **Add menu item**
+     - **Subscriptions** → Type: `/pages/subscriptions` (create page in Step 9)
+     - **Contact** → Type: `/pages/contact` (create page in Step 9)
+     - **Advertising** → Type: `/pages/advertising` (create page in Step 9)
+     - **Privacy** → Type: `/pages/privacy` (create page in Step 9)
+     - **Shipping & Returns** → Type: `/pages/shipping-returns` (create page in Step 9)
+     - **Terms of Service** → Type: `/pages/terms` (create page in Step 9)
+   - **Note:** You can manually type these URLs even if pages don't exist yet
    - Save
+
+**Important:** 
+- The theme uses `linklists.main-menu` for header navigation and `linklists.footer` for footer navigation
+- Make sure your menu handles match exactly: `main-menu` and `footer`
+- If the search shows "No results", you can manually type/paste the URL in the Link field
+- Links won't work until you create the actual pages/collections/blogs they point to
+- **"Itineraries" menu item** should link to `/collections/itineraries` (the collection page showing all itineraries), NOT to a specific product
 
 ---
 
 ## Part 4: Create Pages
 
 ### Step 9: Create Basic Pages
+
+**Note:** Create these pages so the navigation menu links you set up in Step 8 will work.
 
 Go to **Online Store** → **Pages** → **Add page**
 
@@ -156,13 +194,17 @@ Go to **Online Store** → **Pages** → **Add page**
    - Visibility: **Visible**
    - Save
 
-3. **Other Pages** (create as needed):
-   - Contact
-   - Privacy
-   - Terms of Service
-   - Shipping & Returns
-   - etc.
+3. **Other Pages** (create as needed - these are referenced in your Footer menu):
+   - **Contact** → Handle: `contact`
+   - **Privacy** → Handle: `privacy`
+   - **Terms of Service** → Handle: `terms`
+   - **Shipping & Returns** → Handle: `shipping-returns`
+   - **Subscriptions** → Handle: `subscriptions`
+   - **Advertising** → Handle: `advertising`
    - Template: Use default `page` template
+   - **Note:** Make sure the page handles match the URLs you used in your navigation menus
+
+**Note:** Paywall-protected page templates (`page.paywall`, `page.login`, `page.membership`) exist but are not needed since paywall is disabled.
 
 ---
 
@@ -199,24 +241,26 @@ For each itinerary from the PDFs:
 
 7. **Save**
 
-8. **Set Template:**
-   - After saving, go to **Online Store** → **Themes** → **Customize**
-   - Navigate to the product page
-   - In the theme editor, you'll see template options
-   - Change template to `product.itinerary`
+8. **Set Template (Optional):**
+   - After saving, go to **Online Store** → **Themes** → Click **Edit theme** on your theme
+   - Navigate to the product page (use the search/URL bar at the top)
+   - In the theme editor, you can change template to `product.itinerary` if you want a different layout
+   - **Note:** Paywall functionality is disabled, so all content will be visible to everyone
 
-### Step 11: Add Full Itinerary Content
+### Step 11: Add Itinerary Content
 
 After creating the product:
 
-1. Go to **Online Store** → **Themes** → **Customize**
-2. Navigate to the product page (use the search/URL)
-3. Find the **"Itinerary Paywall"** section
-4. Configure:
-   - **Preview Content**: What non-purchasers see (already in product description)
-   - **Full Content**: The complete itinerary (from PDF)
-   - **Day Blocks**: Add day-by-day content using the "Add block" button
-     - For each day: Add title, content, optional image
+1. Go to **Online Store** → **Themes** → Click **Edit theme** on your theme
+2. Navigate to the product page (use the search/URL bar at the top of the editor)
+3. Edit the product description section to add all itinerary content
+4. You can add images, day-by-day details, etc. directly in the product description
+5. **Note:** Since paywall is disabled, all content is public - add everything you want customers to see
+
+**Free Mode (MVP):**
+- By default, itineraries are set to "Free Mode" - they show as FREE with crossed-out price
+- The "Add to Cart" button is hidden in free mode
+- To enable payments later: In the theme editor, find the "Product Main" section and uncheck "Free Mode (MVP)"
 
 ### Step 12: Create Shop Products
 
@@ -237,7 +281,8 @@ For souvenirs/shop items:
 
 ### Step 13: Add Articles
 
-1. Go to **Online Store** → **Blog posts** → **Add blog post**
+1. Go to **Content** → **Blog posts** → **Add blog post**
+   - (Or navigate directly to `/admin/blogs` and click **Add blog post**)
 2. Select blog: `Food, Culture, Life`
 3. Fill in:
    - Title
@@ -250,7 +295,8 @@ For souvenirs/shop items:
 
 ### Step 14: Add Interviews
 
-1. **Blog posts** → **Add blog post**
+1. Go to **Content** → **Blog posts** → **Add blog post**
+   - (Or navigate directly to `/admin/blogs` and click **Add blog post**)
 2. Select blog: `The Interview`
 3. Fill in:
    - Title (person's name)
@@ -265,8 +311,10 @@ For souvenirs/shop items:
 
 ### Step 15: Set Up Homepage Sections
 
-1. Go to **Online Store** → **Themes** → **Customize**
-2. You're on the homepage (index)
+**⚠️ Browser Note:** The theme editor does not work in Firefox. Use Chrome
+
+1. Go to **Online Store** → **Themes** → Click **Edit theme** on your theme
+2. You're on the homepage (index) - it should load automatically
 3. Configure each section:
 
    **Hero Featured:**
@@ -298,66 +346,18 @@ For souvenirs/shop items:
 
 ---
 
-## Part 8: Configure Paywalls
+## Part 8: Paywall System (Currently Disabled)
 
-### Step 16: Set Up Paywall Products
+**Note:** Paywall functionality has been disabled. All content is currently public.
 
-You need products that grant access:
+If you need to re-enable paywalls later, see `RE_ENABLE_PAYWALL.md` for instructions.
 
-1. **Create "Premium Content Pass"** (if using general paywall):
-   - Product → Add product
-   - Title: `Premium Content Pass`
-   - Handle: `premium-content-pass`
-   - Price: e.g., £99
-   - Digital product
-   - Save
+The paywall system includes:
+- Login-protected pages
+- Product-based paywalls (purchase required)
+- Membership-protected content
 
-2. **For Individual Itineraries:**
-   - Each itinerary product IS the paywall product
-   - When someone buys "Danish Riviera Itinerary", they get access to that itinerary's full content
-   - No separate product needed
-
-### Step 17: Test Paywall Access
-
-1. **Create Test Customer:**
-   - Customers → Add customer
-   - Email, name, etc.
-   - Save
-
-2. **Create Test Order:**
-   - Orders → Create order
-   - Add the itinerary product
-   - Assign to test customer
-   - Mark as **Paid**
-   - Mark as **Fulfilled**
-   - Save
-
-3. **Test:**
-   - Log out
-   - Visit itinerary product page
-   - Should see preview content + "Login Required"
-   - Log in as test customer
-   - Should see full itinerary content
-
-### Step 18: Set Up Membership (Optional)
-
-If using membership system:
-
-1. **Create Membership Product:**
-   - Product → Add product
-   - Title: `Souvenir Membership`
-   - Handle: `souvenir-membership`
-   - Price: £99/year (or use subscription app)
-   - Digital product
-   - Save
-
-2. **Tag Customers:**
-   - When a customer subscribes, add tag: `member-active`
-   - Or use subscription app (Recharge) to auto-tag
-
-3. **Create Membership Pages:**
-   - Create page with template `page.membership`
-   - Configure membership tag in section settings
+All paywall code is preserved in the theme and can be easily re-enabled.
 
 ---
 
@@ -365,20 +365,20 @@ If using membership system:
 
 ### Step 19: Set Up Header
 
-1. **Themes** → **Customize** → Click on **Header** section
+1. **Online Store** → **Themes** → **Edit theme** → Click on **Header** section
 2. Configure:
    - Announcement bar text
    - Logo (if you have one)
-   - Navigation links (should auto-populate from menu you created)
+   - Navigation links (should auto-populate from Main menu you created in Content → Menus)
 
 ### Step 20: Set Up Footer
 
-1. In theme customizer, click **Footer** section
+1. In theme editor, click **Footer** section
 2. Configure:
    - Newsletter heading
    - Membership section content
    - Upload membership image
-   - Footer links (should auto-populate from footer menu)
+   - Footer links (should auto-populate from Footer menu you created in Content → Menus)
 
 ---
 
@@ -399,7 +399,7 @@ If using membership system:
    - Meta description
    - Social sharing image
 
-3. **Settings** → **Theme settings** (in customizer)
+3. **Settings** → **Theme settings** (in theme editor - look for Settings icon/section)
    - Colors
    - Fonts
    - Social media links
@@ -415,9 +415,9 @@ If using membership system:
 - [ ] Itineraries collection shows products
 - [ ] Shop collection shows products
 - [ ] Individual itinerary product page:
-  - [ ] Shows preview to non-logged-in users
-  - [ ] Shows "Login Required" when logged out
-  - [ ] Shows full content when customer has purchased
+  - [ ] Displays all content (paywall disabled)
+  - [ ] Images load correctly
+  - [ ] Product description shows properly
 - [ ] Blog posts display correctly
 - [ ] About page displays
 - [ ] Editions page displays
@@ -440,16 +440,16 @@ Create a simple guide for them:
    - Products → Add product
    - Fill in details
    - Add to "Itineraries" collection
-   - In theme customizer, set template to "product.itinerary"
+   - In theme editor (Edit theme), set template to "product.itinerary"
    - Add full content in "Itinerary Paywall" section
 
 2. **Adding Blog Posts:**
-   - Blog posts → Add blog post
+   - Content → Blog posts → Add blog post (or go to `/admin/blogs`)
    - Select blog (Food, Culture, Life OR The Interview)
    - Write and publish
 
 3. **Editing Homepage:**
-   - Themes → Customize
+   - Themes → Edit theme
    - Click any section to edit
    - Save when done
 
@@ -465,7 +465,7 @@ Create a simple guide for them:
 
 - They should already have admin access
 - Show them how to:
-  - Edit pages in theme customizer
+  - Edit pages in theme editor (Edit theme)
   - Add products
   - Manage orders
   - View customer accounts
@@ -474,20 +474,47 @@ Create a simple guide for them:
 
 ## 🚨 Common Issues & Solutions
 
+### Issue: Theme editor not loading / blank page
+**Solution:** 
+- **The theme editor does NOT work in Firefox** - use Chrome
+- Clear browser cache
+- Try incognito/private mode
+- Check if JavaScript is enabled
+
 ### Issue: Theme not showing
 **Solution:** Make sure you published it (Themes → Actions → Publish)
 
 ### Issue: Paywall not working
-**Solution:** 
-- Check order is marked "Paid" AND "Fulfilled"
-- Verify product handle matches exactly
-- Clear browser cache
+**Note:** Paywall is currently disabled. If you need to re-enable it, see `RE_ENABLE_PAYWALL.md`.
 
 ### Issue: Images not uploading
 **Solution:** 
 - Check file size (Shopify limit: 20MB)
 - Use JPG/PNG format
 - Compress if needed
+
+### Issue: 404 when clicking "Itineraries" in menu
+**Solution:**
+- **First:** Make sure you've pushed the theme to Shopify (Step 4) - the collection template files need to be uploaded
+- Check that the menu link points to `/collections/itineraries` (collection page), NOT to a specific product
+- Verify the "Itineraries" collection exists and has the handle `itineraries`
+- Check the collection URL: Go to Collections → Itineraries → Look at the URL in browser or collection settings
+- Make sure the collection is published/visible (Online Store should be checked)
+- **Theme template:** The collection should use "Default collection" template (or "itineraries" if you want custom layout)
+- If you still get 404 after pushing theme, try:
+  - Refresh the theme editor
+  - Check that `templates/collection.json` exists in your theme files
+  - Re-push the theme: `shopify theme push`
+
+### Issue: Want to enable payments (disable Free Mode)
+**Solution:**
+- Go to **Online Store** → **Themes** → **Edit theme**
+- Navigate to any product page (or edit the Product Main section globally)
+- In the left sidebar, find the **Product Main** section
+- Uncheck the **"Free Mode (MVP)"** checkbox
+- Save
+- The add-to-cart button will appear and prices will show normally
+- **Note:** You'll need to do this for each product template, or set it globally if editing the section
 
 ### Issue: Can't see customer object
 **Solution:** 
@@ -498,7 +525,7 @@ Create a simple guide for them:
 **Solution:**
 - Make sure template file is in `templates/` folder
 - File must be `.json` format
-- Refresh theme customizer
+- Refresh theme editor (close and reopen Edit theme)
 
 ---
 
@@ -528,7 +555,7 @@ shopify-theme/
 ### Important URLs:
 
 - Admin: `https://your-store.myshopify.com/admin`
-- Theme Customizer: Admin → Online Store → Themes → Customize
+- Theme Editor: Admin → Online Store → Themes → Edit theme
 - Preview: Use the preview URL from `shopify theme dev`
 
 ---
@@ -539,14 +566,24 @@ Once everything is tested and working:
 
 1. ✅ Theme is live
 2. ✅ All content is added
-3. ✅ Paywalls are configured
-4. ✅ Client can manage content themselves
-5. ✅ Documentation provided
+3. ✅ Client can manage content themselves
+4. ✅ Documentation provided
+
+**Note:** Paywall functionality is disabled but can be re-enabled if needed (see `RE_ENABLE_PAYWALL.md`)
 
 **Next Steps for Client:**
-- They can edit content via theme customizer
+- They can edit content via theme editor (Themes → Edit theme)
 - They can add products via Products section
 - They can manage orders and customers
-- They can add blog posts
+- They can add blog posts via **Content** → **Blog posts**
+- All content is public (no paywalls)
 
 **You're done! 🎉**
+
+---
+
+## 📌 Important Notes
+
+- **Paywall System:** Currently disabled. All content is public.
+- **Re-enabling Paywalls:** See `RE_ENABLE_PAYWALL.md` if needed later.
+- **Product Templates:** Use default `product` template for all products (itinerary template exists but paywall is disabled).
