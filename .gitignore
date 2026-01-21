@@ -1,2 +1,17 @@
+# Shopify
+config/settings_data.json
+.shopify/
+
+# OS
 .DS_Store
-node_modules
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
