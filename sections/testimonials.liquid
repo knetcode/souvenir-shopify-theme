@@ -1,3 +1,66 @@
+<section class="section-testimonials" style="background-color: {{ section.settings.background_color | default: '#ffffff' }};">
+  <div class="section-testimonials__container">
+    <div class="section-testimonials__grid">
+      {%- for block in section.blocks -%}
+        <div class="section-testimonials__item" {{ block.shopify_attributes }}>
+          <p class="section-testimonials__text">{{ block.settings.text }}</p>
+          <p class="section-testimonials__author">– {{ block.settings.author }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-testimonials {
+    padding: 4rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  .section-testimonials__container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .section-testimonials__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .section-testimonials__item {
+    flex: 1;
+  }
+
+  .section-testimonials__text {
+    font-style: italic;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+  }
+
+  .section-testimonials__author {
+    font-size: 0.875rem;
+    font-style: italic;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  @media (min-width: 768px) {
+    .section-testimonials__grid {
+      flex-direction: row;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .section-testimonials__text {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
 {% schema %}
 {
   "name": "Testimonials",
@@ -34,16 +97,3 @@
   ]
 }
 {% endschema %}
-
-<section class="py-16 px-6 border-t border-gray-100" style="background-color: {{ section.settings.background_color | default: '#ffffff' }};">
-  <div class="container">
-    <div class="flex flex-row gap-8 text-center justify-center items-start">
-      {%- for block in section.blocks -%}
-        <div class="flex-1">
-          <p class="italic text-xl mb-4">{{ block.settings.text }}</p>
-          <p class="text-sm italic">– {{ block.settings.author }}</p>
-        </div>
-      {%- endfor -%}
-    </div>
-  </div>
-</section>

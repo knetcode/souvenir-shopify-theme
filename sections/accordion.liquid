@@ -1,13 +1,12 @@
 {%- liquid
   assign section_id = section.settings.custom_id | default: section.id
-  assign section_class = 'section-accordion'
   assign allow_multiple = section.settings.allow_multiple
 -%}
 
 {%- if section.blocks.size > 0 -%}
   <section
     id="{{ section_id }}"
-    class="{{ section_class }} py-12 px-6"
+    class="section-accordion"
     data-allow-multiple="{{ allow_multiple }}"
     style="
       background-color: {{ section.settings.background_color | default: '#ffffff' }};
@@ -15,25 +14,26 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     "
   >
-    <div class="container">
+    <div class="section-accordion__container">
       {%- if section.settings.heading != blank -%}
-        <h2 class="text-3xl md:text-4xl mb-8 uppercase tracking-wide">
+        <h2 class="section-accordion__heading">
           {{ section.settings.heading }}
         </h2>
       {%- endif -%}
 
-      <div class="accordion-list space-y-2">
+      <div class="section-accordion__list">
         {%- for block in section.blocks -%}
-          <div class="accordion-item border-b border-gray-200" {{ block.shopify_attributes }}>
+          <div class="section-accordion__item" {{ block.shopify_attributes }}>
             <button
-              class="accordion-trigger w-full flex items-center justify-between py-4 text-left"
+              class="section-accordion__trigger"
               aria-expanded="false"
               aria-controls="accordion-content-{{ block.id }}"
+              type="button"
             >
-              <span class="accordion-title text-lg font-medium pr-4">
+              <span class="section-accordion__title">
                 {{ block.settings.title }}
               </span>
-              <span class="accordion-icon flex-shrink-0 transition-transform duration-300">
+              <span class="section-accordion__icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
@@ -41,13 +41,11 @@
             </button>
             <div
               id="accordion-content-{{ block.id }}"
-              class="accordion-content overflow-hidden transition-all duration-300"
-              style="max-height: 0;"
+              class="section-accordion__content"
+              hidden
             >
-              <div class="accordion-inner pb-4 pt-2">
-                <div class="prose prose-lg max-w-none">
-                  {{ block.settings.content }}
-                </div>
+              <div class="section-accordion__inner">
+                {{ block.settings.content }}
               </div>
             </div>
           </div>
@@ -55,80 +53,132 @@
       </div>
     </div>
   </section>
-{%- endif -%}
 
-{% stylesheet %}
-  .{{ section_class }} .accordion-item {
-    border-bottom: 1px solid #e5e7eb;
-  }
+  <style>
+    .section-accordion {
+      padding: 3rem 1.5rem;
+    }
 
-  .{{ section_class }} .accordion-trigger {
-    transition: opacity 0.2s ease;
-  }
+    .section-accordion__container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
 
-  .{{ section_class }} .accordion-trigger:hover {
-    opacity: 0.7;
-  }
+    .section-accordion__heading {
+      font-size: 1.875rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      font-weight: 400;
+      line-height: 1.2;
+    }
 
-  .{{ section_class }} .accordion-trigger[aria-expanded="true"] .accordion-icon {
-    transform: rotate(180deg);
-  }
+    .section-accordion__list {
+      display: block;
+    }
 
-  .{{ section_class }} .accordion-content {
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
+    .section-accordion__item {
+      border-bottom: 1px solid #e5e7eb;
+    }
 
-  .{{ section_class }} .space-y-2 > * + * {
-    margin-top: 0.5rem;
-  }
-{% endstylesheet %}
+    .section-accordion__trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
 
-{% javascript %}
-  (function () {
-    const accordions = document.querySelectorAll('.section-accordion .accordion-item');
+    .section-accordion__trigger:hover {
+      opacity: 0.7;
+    }
 
-    accordions.forEach((accordion) => {
-      const trigger = accordion.querySelector('.accordion-trigger');
-      const content = accordion.querySelector('.accordion-content');
-      const inner = accordion.querySelector('.accordion-inner');
+    .section-accordion__title {
+      font-size: 1.125rem;
+      font-weight: 500;
+      padding-right: 1rem;
+    }
 
-      if (!trigger || !content || !inner) return;
+    .section-accordion__icon {
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
 
-      trigger.addEventListener('click', () => {
-        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-        const shouldExpand = !isExpanded;
+    .section-accordion__trigger[aria-expanded="true"] .section-accordion__icon {
+      transform: rotate(180deg);
+    }
 
-        // Close all other accordions if only one should be open at a time
-        const section = trigger.closest('.section-accordion');
-        const allowMultiple = section?.dataset.allowMultiple === 'true';
-        
-        if (!allowMultiple && shouldExpand) {
-          accordions.forEach((otherAccordion) => {
-            if (otherAccordion !== accordion) {
-              const otherTrigger = otherAccordion.querySelector('.accordion-trigger');
-              const otherContent = otherAccordion.querySelector('.accordion-content');
-              const otherInner = otherAccordion.querySelector('.accordion-inner');
-              
-              if (otherTrigger && otherContent && otherInner) {
+    .section-accordion__content {
+      overflow: hidden;
+    }
+
+    .section-accordion__content[hidden] {
+      display: none;
+    }
+
+    .section-accordion__inner {
+      padding: 0 0 1rem 0;
+    }
+
+    .section-accordion__inner p {
+      margin: 0 0 1rem 0;
+    }
+
+    .section-accordion__inner p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+
+  <script>
+    (function() {
+      var section = document.getElementById('{{ section_id }}');
+      if (!section) return;
+
+      var items = section.querySelectorAll('.section-accordion__item');
+      var allowMultiple = section.getAttribute('data-allow-multiple') === 'true';
+
+      items.forEach(function(item) {
+        var trigger = item.querySelector('.section-accordion__trigger');
+        var content = item.querySelector('.section-accordion__content');
+
+        if (!trigger || !content) return;
+
+        trigger.addEventListener('click', function() {
+          var isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+          if (!allowMultiple && !isOpen) {
+            items.forEach(function(otherItem) {
+              var otherTrigger = otherItem.querySelector('.section-accordion__trigger');
+              var otherContent = otherItem.querySelector('.section-accordion__content');
+              if (otherTrigger && otherContent) {
                 otherTrigger.setAttribute('aria-expanded', 'false');
-                otherContent.style.maxHeight = '0px';
+                otherContent.setAttribute('hidden', '');
               }
-            }
-          });
-        }
+            });
+          }
 
-        // Toggle current accordion
-        trigger.setAttribute('aria-expanded', shouldExpand);
-        
-        if (shouldExpand) {
-          content.style.maxHeight = inner.scrollHeight + 'px';
-        } else {
-          content.style.maxHeight = '0px';
-        }
+          if (isOpen) {
+            trigger.setAttribute('aria-expanded', 'false');
+            content.setAttribute('hidden', '');
+          } else {
+            trigger.setAttribute('aria-expanded', 'true');
+            content.removeAttribute('hidden');
+          }
+        });
       });
-    });
-  })();
-{% endjavascript %}
+    })();
+  </script>
+{%- endif -%}
 
 {% schema %}
 {

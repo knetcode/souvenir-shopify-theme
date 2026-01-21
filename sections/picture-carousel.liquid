@@ -77,10 +77,17 @@
   /* Carousel wrapper with arrows */
   .{{ section_class }} .picture-carousel-wrapper {
     position: relative;
+    width: calc(100% + 3rem);
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   .{{ section_class }} .picture-carousel {
     scroll-behavior: smooth;
+    padding-left: 48px;
+    padding-right: 48px;
   }
 
   .scrollbar-hide {
@@ -122,11 +129,11 @@
   }
 
   .{{ section_class }} .carousel-arrow-prev {
-    left: -24px;
+    left: 1.5rem;
   }
 
   .{{ section_class }} .carousel-arrow-next {
-    right: -24px;
+    right: 1.5rem;
   }
 
   @media (max-width: 768px) {
@@ -135,12 +142,25 @@
       height: 40px;
     }
 
+    .{{ section_class }} .picture-carousel-wrapper {
+      width: calc(100% + 3rem);
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .{{ section_class }} .picture-carousel {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
     .{{ section_class }} .carousel-arrow-prev {
-      left: -12px;
+      left: 1.5rem;
     }
 
     .{{ section_class }} .carousel-arrow-next {
-      right: -12px;
+      right: 1.5rem;
     }
   }
 
