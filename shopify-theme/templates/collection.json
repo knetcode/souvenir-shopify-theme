@@ -9,5 +9,8 @@
       "settings": {}
     }
   },
-  "order": ["collection_header", "collection_grid"]
+  "order": [
+    "collection_header",
+    "collection_grid"
+  ]
 }

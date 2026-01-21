@@ -3,11 +3,11 @@
   "name": "Product Main",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "free_mode",
-      "label": "Free Mode (MVP)",
-      "default": true,
-      "info": "When enabled, hides add to cart button and shows price as FREE. Easy to disable later to enable payments."
+      "type": "text",
+      "id": "free_product_message",
+      "label": "Free Product Message",
+      "default": "This itinerary is currently available for free during our MVP launch.",
+      "info": "Message displayed when product price is $0.00"
     }
   ]
 }
@@ -25,27 +25,19 @@
       <div>
         <h1 class="text-3xl md:text-4xl mb-2">{{ product.title }}</h1>
 
-        {%- comment -%} Price Display - Free Mode or Regular {%- endcomment -%}
+        {%- comment -%} Price Display - Free or Regular {%- endcomment -%}
         <div class="mb-6">
           {%- if product.price == 0 -%}
             {%- comment -%} FREE: Show Free label {%- endcomment -%}
             <p class="text-2xl font-bold">Free</p>
-          {%- elsif section.settings.free_mode -%}
-            {%- comment -%} FREE MODE: Show crossed-out price with FREE label {%- endcomment -%}
-            <div class="flex items-center gap-3">
-              <p style="text-decoration: line-through" class="text-2xl line-through text-gray">
-                {{ product.price | money }}
-              </p>
-              <span class="text-2xl font-bold">FREE</span>
-            </div>
           {%- else -%}
-            {%- comment -%} REGULAR MODE: Show normal price {%- endcomment -%}
+            {%- comment -%} REGULAR: Show normal price {%- endcomment -%}
             <p class="text-2xl">{{ product.price | money }}</p>
           {%- endif -%}
         </div>
 
-        {%- comment -%} Product Form - Only show if NOT in free mode {%- endcomment -%}
-        {%- unless section.settings.free_mode -%}
+        {%- comment -%} Product Form - Only show if product has a price {%- endcomment -%}
+        {%- if product.price > 0 -%}
           {% form 'product', product, id: 'product-form' %}
             {%- comment -%} Variants {%- endcomment -%}
             {%- unless product.has_only_default_variant -%}
@@ -112,11 +104,12 @@
             </button>
           {% endform %}
         {%- else -%}
-          {%- comment -%} FREE MODE: Show message instead of form {%- endcomment -%}
+          {%- comment -%} FREE PRODUCT: Show message instead of form {%- endcomment -%}
+          {%- assign free_message = section.settings.free_product_message | default: "This itinerary is currently available for free during our MVP launch." -%}
           <div class="mb-8 p-4 bg-gray-50 border border-gray-200">
-            <p class="text-sm text-gray-600">This itinerary is currently available for free during our MVP launch.</p>
+            <p class="text-sm text-gray-600">{{ free_message }}</p>
           </div>
-        {%- endunless -%}
+        {%- endif -%}
 
         {%- comment -%} Product Description (non-accordion content) {%- endcomment -%}
         {%- if product.description != blank -%}
