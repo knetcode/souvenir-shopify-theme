@@ -1,18 +1,18 @@
 {% schema %}
 {
-  "name": "Hero Featured Itineraries",
+  "name": "Product Carousel",
   "settings": [
     {
       "type": "text",
       "id": "label",
       "label": "Label",
-      "default": "Our Top Itineraries"
+      "default": "Our Top Products"
     },
     {
       "type": "collection",
       "id": "collection",
-      "label": "Itineraries Collection",
-      "info": "Select the collection containing your itineraries"
+      "label": "Collection",
+      "info": "Select the collection containing your products"
     },
     {
       "type": "color",
@@ -34,7 +34,7 @@
   </p>
   
   {%- if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 -%}
-    <div class="hero-carousel-wrapper">
+    <div class="product-carousel-wrapper">
       {%- comment -%} Previous Arrow {%- endcomment -%}
       <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -42,9 +42,9 @@
         </svg>
       </button>
 
-      <div class="hero-carousel flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth">
+      <div class="product-carousel flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth">
         {%- for product in collections[section.settings.collection].products -%}
-          <div class="hero-card flex-shrink-0 w-full md:w-1/2 lg:w-1/3 snap-start">
+          <div class="product-card flex-shrink-0 w-full md:w-1/2 lg:w-1/3 snap-start">
             <a href="{{ product.url }}" class="block group">
               <div class="grid md:grid-cols-2 gap-8 items-center">
                 {%- if product.featured_image != blank -%}
@@ -70,7 +70,7 @@
                       {{ product.description | strip_html | truncatewords: 30 }}
                     </p>
                   {%- endif -%}
-                  <span class="read-more">Read Itinerary</span>
+                  <span class="read-more">Read More</span>
                 </div>
               </div>
             </a>
@@ -94,7 +94,7 @@
     </div>
   {%- else -%}
     <div class="text-center py-12">
-      <p class="text-gray">No itineraries found. Please select a collection in the theme editor.</p>
+      <p class="text-gray">No products found. Please select a collection in the theme editor.</p>
     </div>
   {%- endif -%}
 </section>
@@ -112,22 +112,22 @@
   }
 
   /* Hide native scrollbar */
-  .hero-carousel {
+  .product-carousel {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
-  .hero-carousel::-webkit-scrollbar {
+  .product-carousel::-webkit-scrollbar {
     display: none;
   }
 
   /* Carousel wrapper with arrows */
-  .hero-carousel-wrapper {
+  .product-carousel-wrapper {
     position: relative;
   }
 
   /* Navigation Arrows */
-  .hero-carousel-wrapper .carousel-arrow {
+  .product-carousel-wrapper .carousel-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-100%);
@@ -145,53 +145,53 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .hero-carousel-wrapper .carousel-arrow:hover {
+  .product-carousel-wrapper .carousel-arrow:hover {
     background: #f9fafb;
     border-color: #d1d5db;
   }
 
-  .hero-carousel-wrapper .carousel-arrow:disabled {
+  .product-carousel-wrapper .carousel-arrow:disabled {
     opacity: 0.3;
     cursor: not-allowed;
   }
 
-  .hero-carousel-wrapper .carousel-arrow-prev {
+  .product-carousel-wrapper .carousel-arrow-prev {
     left: -24px;
   }
 
-  .hero-carousel-wrapper .carousel-arrow-next {
+  .product-carousel-wrapper .carousel-arrow-next {
     right: -24px;
   }
 
   @media (max-width: 768px) {
-    .hero-carousel-wrapper .carousel-arrow {
+    .product-carousel-wrapper .carousel-arrow {
       width: 40px;
       height: 40px;
     }
 
-    .hero-carousel-wrapper .carousel-arrow-prev {
+    .product-carousel-wrapper .carousel-arrow-prev {
       left: -12px;
     }
 
-    .hero-carousel-wrapper .carousel-arrow-next {
+    .product-carousel-wrapper .carousel-arrow-next {
       right: -12px;
     }
   }
 
   /* Scrollbar */
-  .hero-carousel-wrapper .carousel-scrollbar {
+  .product-carousel-wrapper .carousel-scrollbar {
     margin-top: 1.5rem;
     padding: 0 48px;
   }
 
-  .hero-carousel-wrapper .carousel-scrollbar-track {
+  .product-carousel-wrapper .carousel-scrollbar-track {
     height: 2px;
     background: #e5e7eb;
     border-radius: 1px;
     position: relative;
   }
 
-  .hero-carousel-wrapper .carousel-scrollbar-thumb {
+  .product-carousel-wrapper .carousel-scrollbar-thumb {
     height: 100%;
     background: #1f2937;
     border-radius: 1px;
@@ -205,17 +205,17 @@
 
 <script>
   (function() {
-    const container = document.querySelector('.hero-carousel-wrapper');
+    const container = document.querySelector('.product-carousel-wrapper');
     if (!container) return;
     
-    const carousel = container.querySelector('.hero-carousel');
+    const carousel = container.querySelector('.product-carousel');
     const prevBtn = container.querySelector('.carousel-arrow-prev');
     const nextBtn = container.querySelector('.carousel-arrow-next');
     const thumb = container.querySelector('.carousel-scrollbar-thumb');
     
     if (!carousel || !prevBtn || !nextBtn || !thumb) return;
     
-    const cardWidth = carousel.querySelector('.hero-card')?.offsetWidth || 400;
+    const cardWidth = carousel.querySelector('.product-card')?.offsetWidth || 400;
     const gap = 24;
     const scrollAmount = cardWidth + gap;
     

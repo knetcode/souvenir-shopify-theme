@@ -1,7 +1,7 @@
 {
   "sections": {
     "hero_featured": {
-      "type": "hero-featured",
+      "type": "product-carousel",
       "settings": {
         "label": "Our Top Itinerary",
         "title": "THE DANISH\nRIVIERA",
