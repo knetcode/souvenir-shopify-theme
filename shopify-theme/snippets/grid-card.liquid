@@ -1,0 +1,75 @@
+{%- comment -%}
+  Grid Card snippet for displaying items in grid layouts
+  
+  Parameters:
+  - item: The object to display (product, article, collection, etc.)
+  - type: Type of item ('product', 'article', 'collection')
+{%- endcomment -%}
+
+{%- case type -%}
+  {%- when 'product' -%}
+    {%- assign card_image = item.featured_image -%}
+    {%- assign card_title = item.title -%}
+    {%- assign card_description = item.description | strip_html | truncate: 100 -%}
+    {%- assign card_href = item.url -%}
+    {%- assign card_category = item.type -%}
+    {%- assign card_price = item.price | money -%}
+    
+  {%- when 'article' -%}
+    {%- assign card_image = item.image -%}
+    {%- assign card_title = item.title -%}
+    {%- assign card_description = item.excerpt_or_content | strip_html | truncate: 100 -%}
+    {%- assign card_href = item.url -%}
+    {%- assign card_category = item.tags | first -%}
+    {%- assign card_price = nil -%}
+    
+  {%- when 'collection' -%}
+    {%- assign card_image = item.featured_image | default: item.image -%}
+    {%- assign card_title = item.title -%}
+    {%- assign card_description = item.description | strip_html | truncate: 100 -%}
+    {%- assign card_href = item.url -%}
+    {%- assign card_category = nil -%}
+    {%- assign card_price = nil -%}
+    
+  {%- else -%}
+    {%- assign card_image = item.image | default: item.featured_image -%}
+    {%- assign card_title = item.title -%}
+    {%- assign card_description = item.description | default: item.excerpt | strip_html | truncate: 100 -%}
+    {%- assign card_href = item.url -%}
+    {%- assign card_category = nil -%}
+    {%- assign card_price = nil -%}
+{%- endcase -%}
+
+<a href="{{ card_href }}" class="group block">
+  {%- if card_image != blank -%}
+    <div class="relative aspect-4-5 overflow-hidden mb-4">
+      {{
+        card_image
+        | image_url: width: 400
+        | image_tag: loading: 'lazy', alt: card_title, class: 'w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
+      }}
+    </div>
+  {%- else -%}
+    <div class="relative aspect-4-5 overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+      <span class="text-gray-400">No image</span>
+    </div>
+  {%- endif -%}
+  
+  {%- if card_category != blank -%}
+    <p class="text-xs uppercase tracking-wider text-gray mb-1">
+      {{ card_category }}
+    </p>
+  {%- endif -%}
+  
+  <h3 class="text-base mb-2 group-hover:opacity-70 transition-opacity">
+    {{ card_title }}
+  </h3>
+  
+  {%- if card_price != blank -%}
+    <p class="text-sm font-medium mb-2">{{ card_price }}</p>
+  {%- endif -%}
+  
+  {%- if card_description != blank -%}
+    <p class="text-sm text-gray line-clamp-2">{{ card_description }}</p>
+  {%- endif -%}
+</a>
