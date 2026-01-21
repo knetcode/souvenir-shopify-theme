@@ -1,5 +1,5 @@
 - [x] Double check price display
-- [ ] Edition is a mini magazine with an one iten and one phys product, 4/5 carousel articles, be able to change.
+- [x] Edition is a mini magazine with an one iten and one phys product, 4/5 carousel articles, be able to change.
 - [x] Remove colors
 - [x] Figure out how to make the colors changeable
 - [x] Accordion days
