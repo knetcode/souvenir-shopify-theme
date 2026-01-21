@@ -46,6 +46,12 @@
       "label": "Shop Title"
     },
     {
+      "type": "color",
+      "id": "placeholder_background_color",
+      "label": "Placeholder Background Color",
+      "default": "#f8d4ce"
+    },
+    {
       "type": "url",
       "id": "shop_link",
       "label": "Shop Link"
@@ -93,6 +99,10 @@
 }
 {% endschema %}
 
+{%- liquid
+  assign placeholder_bg = section.settings.placeholder_background_color | default: settings.color_pink | default: '#f8d4ce'
+-%}
+
 <section class="mb-16">
   <div class="container">
     <h1 class="text-3xl md:text-4xl mb-2">{{ section.settings.edition_title }}</h1>
@@ -102,7 +112,7 @@
       {%- comment -%} Video/Itinerary Card {%- endcomment -%}
       <div>
         {%- if section.settings.itinerary_image != blank -%}
-          <div class="relative aspect-video bg-pink mb-4 overflow-hidden">
+          <div class="relative aspect-video mb-4 overflow-hidden" style="background-color: {{ placeholder_bg }};">
             {{
               section.settings.itinerary_image
               | image_url: width: 800
@@ -183,7 +193,7 @@
         {%- for block in articles -%}
           <article class="group">
             {%- if block.settings.image != blank -%}
-              <div class="relative aspect-4-5 overflow-hidden mb-4 bg-pink">
+              <div class="relative aspect-4-5 overflow-hidden mb-4" style="background-color: {{ placeholder_bg }};">
                 {{
                   block.settings.image
                   | image_url: width: 400

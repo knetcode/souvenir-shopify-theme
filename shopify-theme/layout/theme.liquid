@@ -28,6 +28,23 @@
 
     {% render 'meta-tags' %}
 
+    <style>
+      :root {
+        --background: {{ settings.color_background | default: '#ffffff' }};
+        --foreground: {{ settings.color_foreground | default: '#1a1a1a' }};
+        --pink: {{ settings.color_pink | default: '#f8d4ce' }};
+        --yellow: {{ settings.color_yellow | default: '#e8ff75' }};
+        --cream: {{ settings.color_cream | default: '#faf9f7' }};
+        --gray: {{ settings.color_gray | default: '#6b6b6b' }};
+        --gray-light: {{ settings.color_gray_light | default: '#f5f5f5' }};
+        --gray-50: {{ settings.color_gray_50 | default: '#f9fafb' }};
+        --gray-100: {{ settings.color_gray_100 | default: '#f3f4f6' }};
+        --gray-200: {{ settings.color_gray_200 | default: '#e5e7eb' }};
+        --gray-300: {{ settings.color_gray_300 | default: '#d1d5db' }};
+        --gray-500: {{ settings.color_gray_500 | default: '#6b7280' }};
+        --white: {{ settings.color_white | default: '#ffffff' }};
+      }
+    </style>
     {{ 'theme.css' | asset_url | stylesheet_tag }}
 
     {{ content_for_header }}
@@ -38,10 +55,6 @@
   </head>
 
   <body class="gradient">
-    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
-      {{ 'accessibility.skip_to_text' | t }}
-    </a>
-
     {% sections 'header-group' %}
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
@@ -51,8 +64,8 @@
     {% sections 'footer-group' %}
 
     <ul hidden>
-      <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
-      <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
+      <li id="a11y-refresh-page-message">{{ 'general.accessibility.refresh_page' | t }}</li>
+      <li id="a11y-new-window-message">{{ 'general.accessibility.link_messages.new_window' | t }}</li>
     </ul>
   </body>
 </html>

@@ -15,60 +15,22 @@
 
 <div class="py-8 px-6">
   <div class="container">
-    {%- comment -%} Breadcrumb {%- endcomment -%}
-    <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-gray mb-2">
-      <a href="{{ routes.collections_url }}" class="hover:opacity-70">The Souvenir</a>
-      <span>/</span>
-      <span>{{ product.vendor | default: 'Shop by item' }}</span>
-    </div>
     {%- if product.type != blank -%}
       <p class="text-gray mb-8">{{ product.type }}</p>
     {%- endif -%}
 
     {%- comment -%} Product Section {%- endcomment -%}
     <div class="grid md:grid-cols-2 gap-12 mb-16">
-      {%- comment -%} Product Images {%- endcomment -%}
-      <div>
-        {%- if product.featured_image != blank -%}
-          <div class="relative aspect-square overflow-hidden mb-4">
-            {{
-              product.featured_image
-              | image_url: width: 600
-              | image_tag: loading: 'eager', alt: product.title, class: 'object-cover', id: 'product-image-main'
-            }}
-          </div>
-        {%- endif -%}
-
-        {%- if product.images.size > 1 -%}
-          <div class="flex gap-2">
-            {%- for image in product.images limit: 5 -%}
-              <button
-                class="relative w-16 h-16 overflow-hidden border-2 border-transparent hover:border-foreground product-thumbnail"
-                data-image-url="{{ image | image_url: width: 600 }}"
-              >
-                {{
-                  image
-                  | image_url: width: 100
-                  | image_tag: loading: 'lazy', alt: product.title, class: 'object-cover'
-                }}
-              </button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
-
       {%- comment -%} Product Info {%- endcomment -%}
       <div>
         <h1 class="text-3xl md:text-4xl mb-2">{{ product.title }}</h1>
-        {%- if product.vendor != blank -%}
-          <p class="text-gray uppercase tracking-wide text-sm mb-4">
-            {{ product.vendor }}
-          </p>
-        {%- endif -%}
 
         {%- comment -%} Price Display - Free Mode or Regular {%- endcomment -%}
         <div class="mb-6">
-          {%- if section.settings.free_mode -%}
+          {%- if product.price == 0 -%}
+            {%- comment -%} FREE: Show Free label {%- endcomment -%}
+            <p class="text-2xl font-bold">Free</p>
+          {%- elsif section.settings.free_mode -%}
             {%- comment -%} FREE MODE: Show crossed-out price with FREE label {%- endcomment -%}
             <div class="flex items-center gap-3">
               <p style="text-decoration: line-through" class="text-2xl line-through text-gray">
@@ -156,14 +118,53 @@
           </div>
         {%- endunless -%}
 
-        {%- comment -%} Product Description {%- endcomment -%}
+        {%- comment -%} Product Description (non-accordion content) {%- endcomment -%}
         {%- if product.description != blank -%}
-          <div class="text-gray space-y-4">
+          <div class="product-description-intro text-gray">
             {{ product.description }}
           </div>
         {%- endif -%}
       </div>
+
+      {%- comment -%} Product Images {%- endcomment -%}
+      <div>
+        {%- if product.featured_image != blank -%}
+          <div class="relative aspect-square overflow-hidden mb-4">
+            {{
+              product.featured_image
+              | image_url: width: 600
+              | image_tag: loading: 'eager', alt: product.title, class: 'object-cover', id: 'product-image-main'
+            }}
+          </div>
+        {%- endif -%}
+
+        {%- if product.images.size > 1 -%}
+          <div class="flex gap-2">
+            {%- for image in product.images limit: 5 -%}
+              <button
+                class="relative w-16 h-16 overflow-hidden border-2 border-transparent hover:border-foreground product-thumbnail"
+                data-image-url="{{ image | image_url: width: 600 }}"
+              >
+                {{
+                  image
+                  | image_url: width: 100
+                  | image_tag: loading: 'lazy', alt: product.title, class: 'object-cover'
+                }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
     </div>
+
+    {%- comment -%} Full-width Accordion Section {%- endcomment -%}
+    {%- if product.description != blank -%}
+      <div class="product-description-accordion-container">
+        <div class="product-description-accordion text-gray">
+          {{ product.description }}
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
@@ -199,6 +200,116 @@
       });
     }
   });
+
+  // Convert h5 tags in product description to accordions
+  (function() {
+    const introContainer = document.querySelector('.product-description-intro');
+    const accordionContainer = document.querySelector('.product-description-accordion');
+    if (!accordionContainer) return;
+
+    const h5Elements = accordionContainer.querySelectorAll('h5');
+    if (h5Elements.length === 0) {
+      // No h5s found, hide the accordion container
+      const container = document.querySelector('.product-description-accordion-container');
+      if (container) container.style.display = 'none';
+      return;
+    }
+
+    // Remove h5s and their content from intro container
+    if (introContainer) {
+      const introH5s = introContainer.querySelectorAll('h5');
+      introH5s.forEach(h5 => {
+        let node = h5.nextSibling;
+        // Remove h5 and all following content until next h5 or end
+        while (node) {
+          const nextH5 = node.nodeType === 1 && node.tagName === 'H5';
+          if (nextH5) break;
+          const nextNode = node.nextSibling;
+          node.remove();
+          node = nextNode;
+        }
+        h5.remove();
+      });
+    }
+
+    // Create accordion wrapper
+    const accordionWrapper = document.createElement('div');
+    accordionWrapper.className = 'itinerary-accordion';
+    
+    let isFirst = true;
+    const h5Array = Array.from(h5Elements);
+
+    // Process each h5 and its following content
+    h5Array.forEach((h5, index) => {
+      // Create accordion item
+      const accordionItem = document.createElement('div');
+      accordionItem.className = 'accordion-item';
+      
+      // Create button from h5
+      const button = document.createElement('button');
+      button.className = 'accordion-button';
+      button.type = 'button';
+      button.setAttribute('aria-expanded', isFirst ? 'true' : 'false');
+      button.innerHTML = `
+        <span>${h5.textContent}</span>
+        <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      `;
+      
+      // Create content panel
+      const panel = document.createElement('div');
+      panel.className = 'accordion-panel';
+      panel.style.display = isFirst ? 'block' : 'none';
+      
+      // Collect content between this h5 and the next h5 (or end)
+      let node = h5.nextSibling;
+      const nodesToMove = [];
+      
+      while (node) {
+        const nextH5 = node.nodeType === 1 && node.tagName === 'H5';
+        if (nextH5) break;
+        
+        nodesToMove.push(node);
+        node = node.nextSibling;
+      }
+      
+      // Move nodes to panel
+      nodesToMove.forEach(n => panel.appendChild(n));
+      
+      // Remove the h5 from original
+      h5.remove();
+      
+      // Assemble accordion item
+      accordionItem.appendChild(button);
+      accordionItem.appendChild(panel);
+      accordionWrapper.appendChild(accordionItem);
+      
+      // Add click handler
+      button.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        const panel = this.nextElementSibling;
+        
+        // Close all other panels
+        accordionWrapper.querySelectorAll('.accordion-button').forEach(btn => {
+          if (btn !== this) {
+            btn.setAttribute('aria-expanded', 'false');
+            btn.nextElementSibling.style.display = 'none';
+          }
+        });
+        
+        // Toggle current panel
+        this.setAttribute('aria-expanded', !isExpanded);
+        panel.style.display = !isExpanded ? 'block' : 'none';
+      });
+      
+      isFirst = false;
+    });
+    
+    // Replace original content with accordion
+    accordionContainer.innerHTML = '';
+    accordionContainer.appendChild(accordionWrapper);
+  })();
 </script>
 
 <style>
@@ -209,7 +320,7 @@
   .variant-label {
     display: inline-block;
     padding: 0.5rem 1rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--gray-200);
     cursor: pointer;
     transition: border-color 0.2s;
   }
@@ -229,5 +340,85 @@
 
   .h-8 {
     height: 2rem;
+  }
+
+  /* Accordion Container - Full Width */
+  .product-description-accordion-container {
+    width: 100%;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: none;
+  }
+
+  /* Accordion Styles */
+  .itinerary-accordion {
+    max-width: 100%;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .accordion-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--foreground);
+    transition: opacity 0.2s ease;
+  }
+
+  .accordion-button:hover {
+    opacity: 0.7;
+  }
+
+  .accordion-button span {
+    font-weight: 500;
+  }
+
+  .accordion-icon {
+    flex-shrink: 0;
+    margin-left: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-button[aria-expanded="true"] .accordion-icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion-panel {
+    padding-bottom: 1.25rem;
+    padding-left: 0;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .accordion-panel p,
+  .accordion-panel ul,
+  .accordion-panel ol {
+    margin-bottom: 1rem;
+  }
+
+  .accordion-panel p:last-child,
+  .accordion-panel ul:last-child,
+  .accordion-panel ol:last-child {
+    margin-bottom: 0;
   }
 </style>

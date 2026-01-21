@@ -45,6 +45,48 @@
         "id": "color_gray",
         "label": "Gray",
         "default": "#6b6b6b"
+      },
+      {
+        "type": "color",
+        "id": "color_gray_light",
+        "label": "Gray Light",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "color_gray_50",
+        "label": "Gray 50",
+        "default": "#f9fafb"
+      },
+      {
+        "type": "color",
+        "id": "color_gray_100",
+        "label": "Gray 100",
+        "default": "#f3f4f6"
+      },
+      {
+        "type": "color",
+        "id": "color_gray_200",
+        "label": "Gray 200",
+        "default": "#e5e7eb"
+      },
+      {
+        "type": "color",
+        "id": "color_gray_300",
+        "label": "Gray 300",
+        "default": "#d1d5db"
+      },
+      {
+        "type": "color",
+        "id": "color_gray_500",
+        "label": "Gray 500",
+        "default": "#6b7280"
+      },
+      {
+        "type": "color",
+        "id": "color_white",
+        "label": "White",
+        "default": "#ffffff"
       }
     ]
   },

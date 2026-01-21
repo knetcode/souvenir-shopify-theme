@@ -21,12 +21,21 @@
       "type": "richtext",
       "id": "bio",
       "label": "Bio"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#faf9f7"
     }
   ]
 }
 {% endschema %}
 
-<section class="py-16 px-6 bg-cream">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: settings.color_cream | default: '#faf9f7'
+-%}
+<section class="py-16 px-6" style="background-color: {{ bg_color }};">
   <div class="container text-center">
     {%- if section.settings.image != blank -%}
       <div class="relative w-48 h-48 mx-auto mb-8 overflow-hidden rounded-full">

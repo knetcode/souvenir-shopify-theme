@@ -22,7 +22,7 @@
   {%- if image != blank -%}
     <div class="relative {{ size_classes }} overflow-hidden mb-4">
       {%- if image contains 'http' -%}
-        <img src="{{ image }}" alt="{{ title }}" class="card-image object-cover">
+        <img src="{{ image }}" alt="{{ title }}" class="card-image object-cover" width="400" height="500">
       {%- else -%}
         {{
           image

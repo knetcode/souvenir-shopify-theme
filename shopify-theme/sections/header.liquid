@@ -7,6 +7,12 @@
       "id": "announcement_text",
       "label": "Announcement Bar Text",
       "default": "Promotional offer or updates here just one line"
+    },
+    {
+      "type": "color",
+      "id": "announcement_bar_color",
+      "label": "Announcement Bar Background Color",
+      "default": "#f8d4ce"
     }
   ]
 }
@@ -14,14 +20,17 @@
 
 <header class="w-full">
   {%- if section.settings.announcement_text != blank -%}
-    <div class="bg-pink text-center py-2 px-4 text-sm">
+    {%- liquid
+      assign announcement_bg_color = section.settings.announcement_bar_color | default: settings.color_pink | default: '#f8d4ce'
+    -%}
+    <div class="text-center px-4 text-sm announcement-bar" style="background-color: {{ announcement_bg_color }};">
       <p>{{ section.settings.announcement_text }}</p>
     </div>
   {%- endif -%}
 
-  <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+  <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-100 relative">
     {%- comment -%} Left Navigation {%- endcomment -%}
-    <div class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wide">
+    <div class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wide flex-1">
       {%- for link in linklists.main-menu.links -%}
         <a href="{{ link.url }}" class="hover:opacity-70 transition-opacity">
           {{ link.title }}
@@ -60,12 +69,12 @@
     </button>
 
     {%- comment -%} Logo {%- endcomment -%}
-    <a href="{{ routes.root_url }}" class="absolute left-1/2 -translate-x-1/2 text-2xl md:text-3xl tracking-wider">
+    <a href="{{ routes.root_url }}" class="header-logo hidden lg:block absolute left-1/2 -translate-x-1/2 text-2xl lg:text-3xl tracking-wider pointer-events-auto z-10">
       {{ shop.name | default: 'SOUVENIR' }}
     </a>
 
     {%- comment -%} Right Navigation {%- endcomment -%}
-    <div class="flex items-center gap-4 text-sm uppercase tracking-wide">
+    <div class="flex items-center gap-4 text-sm uppercase tracking-wide flex-1 justify-end">
       {%- if customer -%}
         <a href="{{ routes.account_url }}" class="hidden sm:block hover:opacity-70 transition-opacity">
           Account
@@ -122,6 +131,12 @@
 </header>
 
 <style>
+  .announcement-bar {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    line-height: 1;
+  }
+  
   .mobile-menu-toggle {
     position: relative;
   }
@@ -134,6 +149,10 @@
     transform: translate(-50%, -50%);
   }
   
+  .mobile-menu-toggle .menu-icon {
+    color: rgba(0, 0, 0, 1);
+  }
+  
   .mobile-menu-toggle[aria-expanded="true"] .menu-icon {
     display: none;
   }
@@ -144,6 +163,29 @@
   
   .mobile-menu-toggle .close-icon {
     display: none;
+  }
+
+  /* Prevent logo overlap on smaller screens */
+  .header-logo {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .header-logo {
+      display: block;
+    }
+    
+    nav {
+      min-height: 60px;
+    }
+    
+    nav > div:first-child {
+      min-width: 200px;
+    }
+    
+    nav > div:last-child {
+      min-width: 150px;
+    }
   }
 </style>
 

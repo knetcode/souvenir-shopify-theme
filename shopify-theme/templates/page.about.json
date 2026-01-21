@@ -4,7 +4,7 @@
       "type": "page-hero",
       "settings": {
         "heading": "Thanks for being here!",
-        "background_color": "yellow"
+        "background_color": "#e8ff75"
       }
     },
     "content": {

@@ -19,15 +19,13 @@
     "search": {
       "title": "Search",
       "placeholder": "Search...",
-      "submit": "Search"
+      "submit": "Search",
+      "no_results": "No results found",
+      "results_for": "Results for \"{{ terms }}\""
     },
     "pagination": {
       "previous": "Previous",
       "next": "Next"
-    },
-    "search": {
-      "no_results": "No results found",
-      "results_for": "Results for \"{{ terms }}\""
     }
   },
   "sections": {

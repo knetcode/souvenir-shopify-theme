@@ -6,6 +6,12 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8d4ce"
     }
   ],
   "blocks": [
@@ -50,7 +56,10 @@
 }
 {% endschema %}
 
-<section class="py-12 px-6 bg-pink">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: settings.color_pink | default: '#f8d4ce'
+-%}
+<section class="py-12 px-6" style="background-color: {{ bg_color }};">
   <div class="container">
     {%- assign tabs = section.blocks | where: 'type', 'category_tab' -%}
     {%- if tabs.size > 0 -%}

@@ -12,6 +12,12 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_background_color",
+      "label": "Placeholder Background Color",
+      "default": "#f8d4ce"
     }
   ]
 }
@@ -26,8 +32,11 @@
         {%- for product in collections[section.settings.collection].products limit: 4 -%}
           <div class="flex-shrink-0 w-64 snap-start">
             <a href="{{ product.url }}">
+              {%- liquid
+                assign placeholder_bg = section.settings.placeholder_background_color | default: settings.color_pink | default: '#f8d4ce'
+              -%}
               {%- if product.featured_image != blank -%}
-                <div class="relative aspect-square overflow-hidden mb-4 bg-pink">
+                <div class="relative aspect-square overflow-hidden mb-4" style="background-color: {{ placeholder_bg }};">
                   {{
                     product.featured_image
                     | image_url: width: 400

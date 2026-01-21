@@ -29,6 +29,28 @@
       "id": "link_text",
       "label": "Link Text",
       "default": "Learn More"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8d4ce"
     }
   ]
 }
@@ -36,7 +58,10 @@
 
 <section class="py-16 px-6">
   <div class="container">
-    <div class="relative aspect-video overflow-hidden bg-pink">
+    {%- liquid
+      assign bg_color = section.settings.background_color | default: settings.color_pink | default: '#f8d4ce'
+    -%}
+    <div class="relative aspect-video overflow-hidden" style="background-color: {{ bg_color }};">
       {%- if section.settings.background_image != blank -%}
         {{
           section.settings.background_image
@@ -44,7 +69,15 @@
           | image_tag: loading: 'lazy', alt: section.settings.heading, class: 'object-cover opacity-80'
         }}
       {%- endif -%}
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-white/30">
+      {%- liquid
+        assign overlay_color = section.settings.overlay_color | default: '#ffffff'
+        assign overlay_opacity = section.settings.overlay_opacity | default: 30
+      -%}
+      <div 
+        class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 membership-overlay-{{ section.id }}"
+        data-overlay-color="{{ overlay_color }}"
+        data-overlay-opacity="{{ overlay_opacity }}"
+      >
         <h3 class="text-3xl md:text-4xl mb-4">{{ section.settings.heading }}</h3>
         <p class="text-gray mb-6 max-w-md">
           {{ section.settings.description }}
@@ -60,14 +93,33 @@
 </section>
 
 <style>
-  .bg-white\/30 {
-    background-color: rgba(255, 255, 255, 0.3);
-  }
-  
   .inset-0 {
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
   }
+  
+  /* Fallback for when JavaScript is disabled */
+  .membership-overlay-{{ section.id }} {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
 </style>
+
+<script>
+  (function() {
+    const overlay = document.querySelector('.membership-overlay-{{ section.id }}');
+    if (overlay) {
+      const hexColor = overlay.getAttribute('data-overlay-color') || '#ffffff';
+      const opacity = parseFloat(overlay.getAttribute('data-overlay-opacity') || 30) / 100;
+      
+      // Convert hex to RGB
+      const hex = hexColor.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      
+      overlay.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+  })();
+</script>

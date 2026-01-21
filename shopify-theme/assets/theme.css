@@ -1,16 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #1a1a1a;
-  --pink: #f8d4ce;
-  --pink-dark: #e8b4ae;
-  --yellow: #e8ff75;
-  --yellow-dark: #d4eb61;
-  --cream: #faf9f7;
-  --gray: #6b6b6b;
-  --gray-light: #f5f5f5;
-}
+/* CSS variables are now injected from theme.liquid based on settings */
 
 * {
   box-sizing: border-box;
@@ -363,8 +353,12 @@ img {
   background-color: var(--foreground);
 }
 
+.bg-white {
+  background-color: var(--white);
+}
+
 .text-white {
-  color: white;
+  color: var(--white);
 }
 
 /* Aspect ratios */
@@ -596,16 +590,36 @@ img {
   border-top: 1px solid;
 }
 
+.bg-gray-50 {
+  background-color: var(--gray-50);
+}
+
+.bg-gray-100 {
+  background-color: var(--gray-100);
+}
+
 .border-gray-100 {
-  border-color: #f3f4f6;
+  border-color: var(--gray-100);
 }
 
 .border-gray-200 {
-  border-color: #e5e7eb;
+  border-color: var(--gray-200);
+}
+
+.border-gray-300 {
+  border-color: var(--gray-300);
 }
 
 .border-foreground {
   border-color: var(--foreground);
+}
+
+.text-gray-500 {
+  color: var(--gray-500);
+}
+
+.text-gray-600 {
+  color: var(--gray-500);
 }
 
 /* Hover effects */
