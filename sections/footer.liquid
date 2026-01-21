@@ -1,123 +1,11 @@
 {% schema %}
 {
   "name": "Footer",
-  "settings": [
-    {
-      "type": "text",
-      "id": "newsletter_heading",
-      "label": "Newsletter Heading",
-      "default": "Be in our club – sign up for news from Souvenir"
-    },
-    {
-      "type": "text",
-      "id": "membership_heading",
-      "label": "Membership Heading",
-      "default": "Become a Member"
-    },
-    {
-      "type": "text",
-      "id": "membership_subheading",
-      "label": "Membership Subheading",
-      "default": "Discover unlimited access to Souvenir"
-    },
-    {
-      "type": "text",
-      "id": "membership_price",
-      "label": "Membership Price",
-      "default": "£99 / year"
-    },
-    {
-      "type": "image_picker",
-      "id": "membership_image",
-      "label": "Membership Image"
-    },
-    {
-      "type": "color",
-      "id": "membership_background_color",
-      "label": "Membership Section Background Color",
-      "default": "#1a1a1a"
-    }
-  ]
+  "settings": []
 }
 {% endschema %}
 
 <footer class="w-full">
-  {%- comment -%} Newsletter Section {%- endcomment -%}
-  <section class="py-16 px-6 text-center">
-    <h3 class="text-2xl md:text-3xl italic mb-8">
-      {{ section.settings.newsletter_heading }}
-    </h3>
-    {% form 'customer', class: 'flex flex-col items-center gap-4' %}
-      <input
-        type="email"
-        name="contact[email]"
-        placeholder="Enter your email"
-        class="newsletter-input text-center"
-        required
-      >
-      <button type="submit" class="text-sm uppercase tracking-wide underline underline-offset-4 hover:opacity-70 transition-opacity">
-        Subscribe
-      </button>
-    {% endform %}
-  </section>
-
-  {%- comment -%} Membership Section {%- endcomment -%}
-  <section class="text-white py-16 px-6" style="background-color: {{ section.settings.membership_background_color | default: settings.color_foreground | default: '#1a1a1a' }};">
-    <div class="container">
-      <div class="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16">
-        <div class="flex-1 text-center md:text-left">
-          <h2 class="text-2xl md:text-3xl uppercase tracking-wider mb-2">
-            {{ section.settings.membership_heading }}
-          </h2>
-          <p class="text-xl md:text-2xl mb-6">
-            {{ section.settings.membership_subheading }}
-          </p>
-          
-          <div class="text-sm space-y-4 mb-8 max-w-md">
-            <p class="flex items-baseline gap-4">
-              <span class="uppercase tracking-wide">Membership to Souvenir</span>
-              <span>{{ section.settings.membership_price }}</span>
-            </p>
-            <p class="opacity-80">
-              Receive free access to all itineraries, first look at limited edition 
-              drops before the masses, and exclusive access to our IRL events.
-            </p>
-            <p class="opacity-80">
-              Non-members can still access Itineraries on a pay-per-itinerary basis, 
-              and your paid itineraries will be stored in your account for whenever 
-              you need it.
-            </p>
-          </div>
-
-          <div class="flex flex-col sm:flex-row items-center gap-4">
-            <a
-              href="/pages/membership"
-              class="border border-white px-6 py-3 text-sm uppercase tracking-wide hover:bg-white hover:text-foreground transition-colors"
-            >
-              Become a Member
-            </a>
-            <div class="flex items-center gap-4 text-sm">
-              <span class="opacity-70">Already a Member?</span>
-              <a href="{{ routes.account_login_url }}" class="underline underline-offset-4 hover:opacity-70 transition-opacity">
-                Log In
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {%- if section.settings.membership_image != blank -%}
-          <div class="w-48 h-48 md:w-56 md:h-56 relative overflow-hidden">
-            {{
-              section.settings.membership_image
-              | image_url: width: 400
-              | image_tag: loading: 'lazy', alt: section.settings.membership_image.alt, class: 'object-cover'
-            }}
-          </div>
-        {%- endif -%}
-      </div>
-    </div>
-  </section>
-
   {%- comment -%} Bottom Footer {%- endcomment -%}
   <section class="border-t border-gray-200 py-8 px-6">
     <div class="container flex flex-col md:flex-row items-center justify-between gap-6 text-sm">
@@ -140,20 +28,13 @@
     margin: 0 auto;
   }
   
-  .items-baseline {
-    align-items: baseline;
-  }
-  
   .opacity-70 {
     opacity: 0.7;
   }
   
-  .opacity-80 {
-    opacity: 0.8;
-  }
-  
-  
-  .underline-offset-4 {
-    text-underline-offset: 4px;
+  .transition-opacity {
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
 </style>

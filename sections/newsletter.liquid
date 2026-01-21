@@ -1,0 +1,69 @@
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Be in our club – sign up for news from Souvenir"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email Placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-16 px-6 text-center"{% if section.settings.background_color %} style="background-color: {{ section.settings.background_color }};"{% endif %}{% if section.settings.text_color %} style="color: {{ section.settings.text_color }};"{% endif %}>
+  <h3 class="text-2xl md:text-3xl italic mb-8"{% if section.settings.text_color %} style="color: {{ section.settings.text_color }};"{% endif %}>
+    {{ section.settings.heading }}
+  </h3>
+  {% form 'customer', class: 'flex flex-col items-center gap-4' %}
+    <input
+      type="email"
+      name="contact[email]"
+      placeholder="{{ section.settings.email_placeholder }}"
+      class="newsletter-input text-center"
+      required
+    >
+    <button type="submit" class="text-sm uppercase tracking-wide underline underline-offset-4 hover:opacity-70 transition-opacity"{% if section.settings.text_color %} style="color: {{ section.settings.text_color }};"{% endif %}>
+      {{ section.settings.button_text }}
+    </button>
+  {% endform %}
+</section>
+
+<style>
+  .underline-offset-4 {
+    text-underline-offset: 4px;
+  }
+  
+  .opacity-70 {
+    opacity: 0.7;
+  }
+  
+  .transition-opacity {
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+</style>

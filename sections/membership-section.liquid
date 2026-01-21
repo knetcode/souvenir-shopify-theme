@@ -1,0 +1,195 @@
+{% schema %}
+{
+  "name": "Membership Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Become a Member"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover unlimited access to Souvenir"
+    },
+    {
+      "type": "text",
+      "id": "membership_label",
+      "label": "Membership Label",
+      "default": "Membership to Souvenir"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price",
+      "default": "£99 / year"
+    },
+    {
+      "type": "textarea",
+      "id": "description_1",
+      "label": "Description 1",
+      "default": "Receive free access to all itineraries, first look at limited edition drops before the masses, and exclusive access to our IRL events."
+    },
+    {
+      "type": "textarea",
+      "id": "description_2",
+      "label": "Description 2",
+      "default": "Non-members can still access Itineraries on a pay-per-itinerary basis, and your paid itineraries will be stored in your account for whenever you need it."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "Become a Member"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Link",
+      "default": "/pages/membership"
+    },
+    {
+      "type": "text",
+      "id": "login_text",
+      "label": "Login Text",
+      "default": "Already a Member?"
+    },
+    {
+      "type": "text",
+      "id": "login_link_text",
+      "label": "Login Link Text",
+      "default": "Log In"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="text-white py-16 px-6" style="background-color: {{ section.settings.background_color | default: '#1a1a1a' }}; color: {{ section.settings.text_color | default: '#ffffff' }};">
+  <div class="container">
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16{% if section.settings.image_position == 'left' %} md:flex-row-reverse{% endif %}">
+      <div class="flex-1 text-center md:text-left">
+        <h2 class="text-2xl md:text-3xl uppercase tracking-wider mb-2" style="color: {{ section.settings.text_color | default: '#ffffff' }};">
+          {{ section.settings.heading }}
+        </h2>
+        <p class="text-xl md:text-2xl mb-6" style="color: {{ section.settings.text_color | default: '#ffffff' }};">
+          {{ section.settings.subheading }}
+        </p>
+        
+        <div class="text-sm space-y-4 mb-8 max-w-md">
+          <p class="flex items-baseline gap-4" style="color: {{ section.settings.text_color | default: '#ffffff' }};">
+            <span class="uppercase tracking-wide">{{ section.settings.membership_label }}</span>
+            <span>{{ section.settings.price }}</span>
+          </p>
+          {%- if section.settings.description_1 != blank -%}
+            <p class="opacity-80" style="color: {{ section.settings.text_color | default: '#ffffff' }};">
+              {{ section.settings.description_1 }}
+            </p>
+          {%- endif -%}
+          {%- if section.settings.description_2 != blank -%}
+            <p class="opacity-80" style="color: {{ section.settings.text_color | default: '#ffffff' }};">
+              {{ section.settings.description_2 }}
+            </p>
+          {%- endif -%}
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+          <a
+            href="{{ section.settings.cta_link | default: '/pages/membership' }}"
+            class="border border-white px-6 py-3 text-sm uppercase tracking-wide hover:bg-white hover:text-foreground transition-colors"
+            style="border-color: {{ section.settings.text_color | default: '#ffffff' }}; color: {{ section.settings.text_color | default: '#ffffff' }};"
+            onmouseover="this.style.backgroundColor='{{ section.settings.text_color | default: '#ffffff' }}'; this.style.color='{{ section.settings.background_color | default: '#1a1a1a' }}';"
+            onmouseout="this.style.backgroundColor='transparent'; this.style.color='{{ section.settings.text_color | default: '#ffffff' }}';"
+          >
+            {{ section.settings.cta_text }}
+          </a>
+          <div class="flex items-center gap-4 text-sm">
+            <span class="opacity-70" style="color: {{ section.settings.text_color | default: '#ffffff' }};">{{ section.settings.login_text }}</span>
+            <a href="{{ routes.account_login_url }}" class="underline underline-offset-4 hover:opacity-70 transition-opacity" style="color: {{ section.settings.text_color | default: '#ffffff' }};">
+              {{ section.settings.login_link_text }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {%- if section.settings.image != blank -%}
+        <div class="w-48 h-48 md:w-56 md:h-56 relative overflow-hidden">
+          {{
+            section.settings.image
+            | image_url: width: 400
+            | image_tag: loading: 'lazy', alt: section.settings.heading, class: 'object-cover'
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .items-baseline {
+    align-items: baseline;
+  }
+  
+  .opacity-70 {
+    opacity: 0.7;
+  }
+  
+  .opacity-80 {
+    opacity: 0.8;
+  }
+  
+  .underline-offset-4 {
+    text-underline-offset: 4px;
+  }
+  
+  .transition-colors {
+    transition-property: color, background-color, border-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+  
+  .transition-opacity {
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+</style>
