@@ -1,0 +1,333 @@
+{%- liquid
+  assign selected_blog = section.settings.blog
+  assign section_id = section.settings.custom_id | default: section.id
+  assign section_class = 'section-blog-carousel'
+-%}
+
+{%- if selected_blog != blank and selected_blog.articles.size > 0 -%}
+  <section
+    id="{{ section_id }}"
+    class="{{ section_class }} py-12 px-6"
+    style="
+      --section-padding-top: {{ section.settings.padding_top }}px;
+      --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
+  >
+    <div class="container">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="text-3xl md:text-4xl mb-8 uppercase tracking-wide">
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+
+      <div class="blog-carousel-wrapper">
+        {%- comment -%} Previous Arrow {%- endcomment -%}
+        <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+
+        <div class="blog-carousel flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+          {%- for article in selected_blog.articles limit: section.settings.articles_limit -%}
+            <article class="blog-card group flex-shrink-0 w-64 md:w-80 snap-start">
+              <a href="{{ article.url }}">
+                {%- if article.image != blank -%}
+                  <div class="relative aspect-4-5 overflow-hidden mb-4">
+                    {{
+                      article.image
+                      | image_url: width: 400
+                      | image_tag:
+                        loading: 'lazy',
+                        alt: article.title,
+                        class: 'blog-card-image absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
+                    }}
+                  </div>
+                {%- else -%}
+                  <div class="relative aspect-4-5 overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                    <span class="text-gray text-sm">No image</span>
+                  </div>
+                {%- endif -%}
+
+                {%- if article.tags.size > 0 -%}
+                  <p class="text-xs uppercase tracking-wider text-gray mb-1">
+                    {{ article.tags.first }}
+                  </p>
+                {%- endif -%}
+
+                <h3 class="text-base mb-2">
+                  {{ article.title }}
+                </h3>
+
+                {%- if article.excerpt != blank -%}
+                  <p class="text-sm text-gray mb-3 line-clamp-3">
+                    {{ article.excerpt | strip_html | truncate: section.settings.excerpt_length }}
+                  </p>
+                {%- endif -%}
+
+                <span class="read-more text-sm">Read More</span>
+              </a>
+            </article>
+          {%- endfor -%}
+
+          {%- if section.settings.show_view_all and selected_blog.articles.size > section.settings.articles_limit -%}
+            <div class="blog-card flex-shrink-0 w-64 md:w-80 snap-start flex items-center justify-center">
+              <a href="{{ selected_blog.url }}" class="btn-primary"> View All Posts </a>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Next Arrow {%- endcomment -%}
+        <button class="carousel-arrow carousel-arrow-next" aria-label="Next">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+
+        {%- comment -%} Scrollbar {%- endcomment -%}
+        <div class="carousel-scrollbar">
+          <div class="carousel-scrollbar-track">
+            <div class="carousel-scrollbar-thumb"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .{{ section_class }} {
+    padding-top: var(--section-padding-top, 40px);
+    padding-bottom: var(--section-padding-bottom, 40px);
+  }
+
+  /* Carousel wrapper with arrows */
+  .{{ section_class }} .blog-carousel-wrapper {
+    position: relative;
+  }
+
+  .{{ section_class }} .blog-carousel {
+    scroll-behavior: smooth;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Navigation Arrows */
+  .{{ section_class }} .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-100%);
+    width: 48px;
+    height: 48px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .{{ section_class }} .carousel-arrow:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+  }
+
+  .{{ section_class }} .carousel-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .{{ section_class }} .carousel-arrow-prev {
+    left: -24px;
+  }
+
+  .{{ section_class }} .carousel-arrow-next {
+    right: -24px;
+  }
+
+  @media (max-width: 768px) {
+    .{{ section_class }} .carousel-arrow {
+      width: 40px;
+      height: 40px;
+    }
+
+    .{{ section_class }} .carousel-arrow-prev {
+      left: -12px;
+    }
+
+    .{{ section_class }} .carousel-arrow-next {
+      right: -12px;
+    }
+  }
+
+  /* Scrollbar */
+  .{{ section_class }} .carousel-scrollbar {
+    margin-top: 1.5rem;
+    padding: 0 48px;
+  }
+
+  .{{ section_class }} .carousel-scrollbar-track {
+    height: 2px;
+    background: #e5e7eb;
+    border-radius: 1px;
+    position: relative;
+  }
+
+  .{{ section_class }} .carousel-scrollbar-thumb {
+    height: 100%;
+    background: #1f2937;
+    border-radius: 1px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 40px;
+    transition: width 0.1s ease, left 0.1s ease;
+  }
+
+  .{{ section_class }} .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Card image positioning - overrides global img height:auto */
+  .{{ section_class }} .blog-card-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    const containers = document.querySelectorAll('.section-blog-carousel .blog-carousel-wrapper');
+
+    containers.forEach((container) => {
+      const carousel = container.querySelector('.blog-carousel');
+      const prevBtn = container.querySelector('.carousel-arrow-prev');
+      const nextBtn = container.querySelector('.carousel-arrow-next');
+      const thumb = container.querySelector('.carousel-scrollbar-thumb');
+
+      if (!carousel || !prevBtn || !nextBtn || !thumb) return;
+
+      const cardWidth = carousel.querySelector('.blog-card')?.offsetWidth || 320;
+      const gap = 16;
+      const scrollAmount = cardWidth + gap;
+
+      function updateScrollbar() {
+        const scrollLeft = carousel.scrollLeft;
+        const scrollWidth = carousel.scrollWidth - carousel.clientWidth;
+        const thumbWidth = Math.max((carousel.clientWidth / carousel.scrollWidth) * 100, 10);
+        const thumbPosition = scrollWidth > 0 ? (scrollLeft / scrollWidth) * (100 - thumbWidth) : 0;
+
+        thumb.style.width = thumbWidth + '%';
+        thumb.style.left = thumbPosition + '%';
+
+        prevBtn.disabled = scrollLeft <= 0;
+        nextBtn.disabled = scrollLeft >= scrollWidth - 1;
+      }
+
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+
+      carousel.addEventListener('scroll', updateScrollbar);
+      window.addEventListener('resize', updateScrollbar);
+
+      updateScrollbar();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Blog Carousel",
+  "tag": "section",
+  "class": "blog-carousel",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Select Blog"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Latest Posts"
+    },
+    {
+      "type": "range",
+      "id": "articles_limit",
+      "label": "Number of articles to show",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' button",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_length",
+      "label": "Excerpt length (characters)",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "custom_id",
+      "label": "Custom Section ID"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Carousel"
+    }
+  ]
+}
+{% endschema %}

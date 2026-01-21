@@ -1,0 +1,178 @@
+{% schema %}
+{
+  "name": "Video",
+  "settings": [
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"],
+      "info": "Paste a YouTube or Vimeo URL"
+    },
+    {
+      "type": "text",
+      "id": "video_url_custom",
+      "label": "Custom Video URL",
+      "info": "For direct video files (MP4, etc.) or other platforms. This will override the video URL above."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 600,
+      "max": 1400,
+      "step": 100,
+      "unit": "px",
+      "default": 1200,
+      "info": "Maximum width of the video container"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video"
+    }
+  ]
+}
+{% endschema %}
+
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign padding_top = section.settings.padding_top | default: 64
+  assign padding_bottom = section.settings.padding_bottom | default: 64
+  assign max_width = section.settings.max_width | default: 1200
+  
+  if section.settings.video_url_custom != blank
+    assign video_url = section.settings.video_url_custom
+  elsif section.settings.video_url != blank
+    assign video_url = section.settings.video_url
+  else
+    assign video_url = blank
+  endif
+-%}
+
+<section 
+  class="px-6"
+  style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;"
+>
+  <div class="container">
+    <div class="video-wrapper" style="max-width: {{ max_width }}px; margin: 0 auto;">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="text-3xl md:text-4xl mb-8 text-center uppercase tracking-wide">
+          {{ section.settings.heading }}
+        </h2>
+      {%- endif -%}
+
+      {%- if video_url != blank -%}
+        {%- comment -%} Parse video URL and create appropriate embed {%- endcomment -%}
+        {%- if video_url contains 'youtube.com' or video_url contains 'youtu.be' -%}
+          {%- comment -%} Extract YouTube video ID {%- endcomment -%}
+          {%- if video_url contains 'youtube.com/watch?v=' -%}
+            {%- assign video_id = video_url | split: 'v=' | last | split: '&' | first -%}
+          {%- elsif video_url contains 'youtube.com/embed/' -%}
+            {%- assign video_id = video_url | split: 'youtube.com/embed/' | last | split: '?' | first -%}
+          {%- elsif video_url contains 'youtu.be/' -%}
+            {%- assign video_id = video_url | split: 'youtu.be/' | last | split: '?' | first -%}
+          {%- endif -%}
+          <div class="relative aspect-video w-full overflow-hidden">
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}?rel=0"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              class="absolute inset-0 w-full h-full"
+            ></iframe>
+          </div>
+        {%- elsif video_url contains 'vimeo.com' -%}
+          {%- comment -%} Extract Vimeo video ID {%- endcomment -%}
+          {%- if video_url contains 'player.vimeo.com/video/' -%}
+            {%- assign video_id = video_url | split: 'player.vimeo.com/video/' | last | split: '?' | first -%}
+          {%- elsif video_url contains 'vimeo.com/' -%}
+            {%- assign video_id = video_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+          {%- endif -%}
+          <div class="relative aspect-video w-full overflow-hidden">
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              class="absolute inset-0 w-full h-full"
+            ></iframe>
+          </div>
+        {%- else -%}
+          {%- comment -%} Direct video file (MP4, etc.) {%- endcomment -%}
+          <div class="relative aspect-video w-full overflow-hidden">
+            <video
+              controls
+              class="w-full h-full object-contain"
+              style="background: #000;"
+            >
+              <source src="{{ video_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .video-wrapper {
+    width: 100%;
+  }
+
+  .aspect-video {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+  }
+
+  .aspect-video iframe,
+  .aspect-video video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .aspect-video > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+{% endstylesheet %}

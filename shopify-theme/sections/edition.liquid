@@ -1,0 +1,481 @@
+{%- liquid
+  assign section_id = section.settings.custom_id | default: section.id
+  assign section_class = 'section-edition'
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="{{ section_class }} py-12 px-6"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="container">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'edition' -%}
+        <div class="mb-16 last:mb-0" {{ block.shopify_attributes }}>
+          {%- if block.settings.title != blank -%}
+            <h3 class="text-2xl md:text-3xl mb-8 uppercase tracking-wide">
+              {{ block.settings.title }}
+            </h3>
+          {%- endif -%}
+
+          {%- if block.settings.description != blank -%}
+            <p class="text-gray mb-8 max-w-3xl">
+              {{ block.settings.description }}
+            </p>
+          {%- endif -%}
+
+          {%- comment -%} Combined Products and Articles Carousel {%- endcomment -%}
+          {%- liquid
+            assign has_products = false
+            assign has_articles = false
+            if block.settings.products != blank and block.settings.products.count > 0
+              assign has_products = true
+            endif
+            if block.settings.blog != blank and block.settings.blog.articles.size > 0
+              assign has_articles = true
+            endif
+          -%}
+
+          {%- if has_products or has_articles -%}
+            <div class="edition-carousel-container">
+              {%- comment -%} Previous Arrow {%- endcomment -%}
+              <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 18l-6-6 6-6"/>
+                </svg>
+              </button>
+
+              <div class="edition-carousel">
+                {%- comment -%} Products {%- endcomment -%}
+                {%- if has_products -%}
+                  {%- for product in block.settings.products -%}
+                    <article class="edition-card">
+                      <a href="{{ product.url }}">
+                        {%- if product.featured_image != blank -%}
+                          <div class="edition-card-image-wrapper">
+                            {{
+                              product.featured_image
+                              | image_url: width: 400
+                              | image_tag: loading: 'lazy', alt: product.title, class: 'edition-card-image'
+                            }}
+                          </div>
+                        {%- else -%}
+                          <div class="edition-card-placeholder">
+                            <span class="text-gray text-sm">No image</span>
+                          </div>
+                        {%- endif -%}
+
+                        {%- if product.type != blank -%}
+                          <p class="edition-card-category">
+                            {{ product.type }}
+                          </p>
+                        {%- endif -%}
+
+                        <h3 class="edition-card-title">
+                          {{ product.title }}
+                        </h3>
+
+                        {%- if product.price != blank -%}
+                          <p class="edition-card-price">
+                            {%- if product.price == 0 -%}
+                              FREE
+                            {%- else -%}
+                              {{ product.price | money }}
+                            {%- endif -%}
+                          </p>
+                        {%- endif -%}
+
+                        <span class="read-more text-sm">Shop</span>
+                      </a>
+                    </article>
+                  {%- endfor -%}
+                {%- endif -%}
+
+                {%- comment -%} Articles {%- endcomment -%}
+                {%- if has_articles -%}
+                  {%- assign articles_limit = block.settings.articles_limit | default: 4 -%}
+                  {%- for article in block.settings.blog.articles limit: articles_limit -%}
+                    <article class="edition-card">
+                      <a href="{{ article.url }}">
+                        {%- if article.image != blank -%}
+                          <div class="edition-card-image-wrapper">
+                            {{
+                              article.image
+                              | image_url: width: 400
+                              | image_tag: loading: 'lazy', alt: article.title, class: 'edition-card-image'
+                            }}
+                          </div>
+                        {%- else -%}
+                          <div class="edition-card-placeholder">
+                            <span class="text-gray text-sm">No image</span>
+                          </div>
+                        {%- endif -%}
+
+                        {%- if article.tags.size > 0 -%}
+                          <p class="edition-card-category">
+                            {{ article.tags.first }}
+                          </p>
+                        {%- endif -%}
+
+                        <h3 class="edition-card-title">
+                          {{ article.title }}
+                        </h3>
+
+                        {%- if article.excerpt != blank -%}
+                          <p class="edition-card-excerpt">
+                            {{ article.excerpt | strip_html | truncate: 100 }}
+                          </p>
+                        {%- endif -%}
+
+                        <span class="read-more text-sm">Read More</span>
+                      </a>
+                    </article>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+
+              {%- comment -%} Next Arrow {%- endcomment -%}
+              <button class="carousel-arrow carousel-arrow-next" aria-label="Next">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </button>
+
+              {%- comment -%} Scrollbar {%- endcomment -%}
+              <div class="carousel-scrollbar">
+                <div class="carousel-scrollbar-track">
+                  <div class="carousel-scrollbar-thumb"></div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .{{ section_class }} {
+    padding-top: var(--section-padding-top, 40px);
+    padding-bottom: var(--section-padding-bottom, 40px);
+  }
+
+  /* Carousel wrapper with arrows */
+  .{{ section_class }} .edition-carousel-container {
+    position: relative;
+  }
+
+  /* Carousel container */
+  .{{ section_class }} .edition-carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .{{ section_class }} .edition-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Navigation Arrows */
+  .{{ section_class }} .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-100%);
+    width: 48px;
+    height: 48px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .{{ section_class }} .carousel-arrow:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+  }
+
+  .{{ section_class }} .carousel-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .{{ section_class }} .carousel-arrow-prev {
+    left: -24px;
+  }
+
+  .{{ section_class }} .carousel-arrow-next {
+    right: -24px;
+  }
+
+  @media (max-width: 768px) {
+    .{{ section_class }} .carousel-arrow {
+      width: 40px;
+      height: 40px;
+    }
+
+    .{{ section_class }} .carousel-arrow-prev {
+      left: -12px;
+    }
+
+    .{{ section_class }} .carousel-arrow-next {
+      right: -12px;
+    }
+  }
+
+  /* Scrollbar */
+  .{{ section_class }} .carousel-scrollbar {
+    margin-top: 1.5rem;
+    padding: 0 48px;
+  }
+
+  .{{ section_class }} .carousel-scrollbar-track {
+    height: 2px;
+    background: #e5e7eb;
+    border-radius: 1px;
+    position: relative;
+  }
+
+  .{{ section_class }} .carousel-scrollbar-thumb {
+    height: 100%;
+    background: #1f2937;
+    border-radius: 1px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 40px;
+    transition: width 0.1s ease, left 0.1s ease;
+  }
+
+  /* Card styling - fixed width for uniform appearance */
+  .{{ section_class }} .edition-card {
+    flex-shrink: 0;
+    width: 256px;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 768px) {
+    .{{ section_class }} .edition-card {
+      width: 320px;
+    }
+  }
+
+  /* Card image container with 4:5 aspect ratio */
+  .{{ section_class }} .edition-card-image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  /* Placeholder for missing images */
+  .{{ section_class }} .edition-card-placeholder {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Card image - absolute positioning to fill container */
+  .{{ section_class }} .edition-card-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .{{ section_class }} .edition-card:hover .edition-card-image {
+    transform: scale(1.05);
+  }
+
+  /* Typography */
+  .{{ section_class }} .edition-card-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+  }
+
+  .{{ section_class }} .edition-card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .{{ section_class }} .edition-card-price {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+  }
+
+  .{{ section_class }} .edition-card-excerpt {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .{{ section_class }} .last\:mb-0:last-child {
+    margin-bottom: 0;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    const containers = document.querySelectorAll('.section-edition .edition-carousel-container');
+
+    containers.forEach((container) => {
+      const carousel = container.querySelector('.edition-carousel');
+      const prevBtn = container.querySelector('.carousel-arrow-prev');
+      const nextBtn = container.querySelector('.carousel-arrow-next');
+      const thumb = container.querySelector('.carousel-scrollbar-thumb');
+
+      if (!carousel || !prevBtn || !nextBtn || !thumb) return;
+
+      const cardWidth = carousel.querySelector('.edition-card')?.offsetWidth || 320;
+      const gap = 16;
+      const scrollAmount = cardWidth + gap;
+
+      function updateScrollbar() {
+        const scrollLeft = carousel.scrollLeft;
+        const scrollWidth = carousel.scrollWidth - carousel.clientWidth;
+        const thumbWidth = Math.max((carousel.clientWidth / carousel.scrollWidth) * 100, 10);
+        const thumbPosition = scrollWidth > 0 ? (scrollLeft / scrollWidth) * (100 - thumbWidth) : 0;
+
+        thumb.style.width = thumbWidth + '%';
+        thumb.style.left = thumbPosition + '%';
+
+        prevBtn.disabled = scrollLeft <= 0;
+        nextBtn.disabled = scrollLeft >= scrollWidth - 1;
+      }
+
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      });
+
+      carousel.addEventListener('scroll', updateScrollbar);
+      window.addEventListener('resize', updateScrollbar);
+
+      updateScrollbar();
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Edition",
+  "tag": "section",
+  "class": "edition",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_id",
+      "label": "Custom Section ID"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "edition",
+      "name": "Edition",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Edition Title",
+          "default": "Edition One"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "header",
+          "content": "Products"
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Select Products",
+          "limit": 50
+        },
+        {
+          "type": "header",
+          "content": "Blog Posts"
+        },
+        {
+          "type": "blog",
+          "id": "blog",
+          "label": "Select Blog"
+        },
+        {
+          "type": "range",
+          "id": "articles_limit",
+          "label": "Number of articles to show",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 4
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Edition",
+      "blocks": [
+        {
+          "type": "edition"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

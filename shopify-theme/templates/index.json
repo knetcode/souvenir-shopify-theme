@@ -18,46 +18,14 @@
         "link_text": "Discover more"
       }
     },
-    "edition_featured": {
-      "type": "edition-featured",
+    "blog_carousel": {
+      "type": "blog-carousel",
       "settings": {
-        "edition_title": "EDITION ONE",
-        "edition_subtitle": "North Zealand, Denmark",
-        "itinerary_label": "7 Days in North Zealand, Denmark",
-        "itinerary_title": "Sun, sea & skies on the North Zealand coast. How we did it in detail day-by-day.",
-        "shop_title": "The perfect cotton co-ords we discovered in North Zealand and couldn't wait to share with you."
-      },
-      "blocks": {
-        "article_1": {
-          "type": "article",
-          "settings": {
-            "category": "Spending Time With",
-            "title": "A conversation with the fashion duo bringing knitting to the cool girls of Copenhagen"
-          }
-        },
-        "article_2": {
-          "type": "article",
-          "settings": {
-            "category": "Postcards",
-            "title": "The owner of our favourite café in Helsingor tells us the untouched corners of Denmark she explores with her three boys"
-          }
-        },
-        "article_3": {
-          "type": "article",
-          "settings": {
-            "category": "Summer Leaves",
-            "title": "A love letter to the summer houses of Denmark (and how to rent one)"
-          }
-        },
-        "article_4": {
-          "type": "article",
-          "settings": {
-            "category": "Kit",
-            "title": "Essential travel items"
-          }
-        }
-      },
-      "block_order": ["article_1", "article_2", "article_3", "article_4"]
+        "heading": "Latest Posts",
+        "articles_limit": 8,
+        "show_view_all": true,
+        "excerpt_length": 100
+      }
     },
     "testimonials": {
       "type": "testimonials",
@@ -86,79 +54,21 @@
       },
       "block_order": ["testimonial_1", "testimonial_2", "testimonial_3"]
     },
-    "categories": {
-      "type": "categories",
-      "blocks": {
-        "tab_1": {
-          "type": "category_tab",
-          "settings": {
-            "label": "School Holidays"
-          }
-        },
-        "tab_2": {
-          "type": "category_tab",
-          "settings": {
-            "label": "People"
-          }
-        },
-        "tab_3": {
-          "type": "category_tab",
-          "settings": {
-            "label": "Adventure"
-          }
-        },
-        "tab_4": {
-          "type": "category_tab",
-          "settings": {
-            "label": "City Breaks"
-          }
-        },
-        "item_1": {
-          "type": "category_item",
-          "settings": {
-            "title": "Half Term in Mallorca",
-            "author": "Half Term"
-          }
-        },
-        "item_2": {
-          "type": "category_item",
-          "settings": {
-            "title": "Easter in Lisbon",
-            "author": "Laura Reed"
-          }
-        },
-        "item_3": {
-          "type": "category_item",
-          "settings": {
-            "title": "Summer in Normandy",
-            "author": "Tessa Norman"
-          }
-        },
-        "item_4": {
-          "type": "category_item",
-          "settings": {
-            "title": "Christmas in Vienna",
-            "author": "Vienna"
-          }
-        }
-      },
-      "block_order": ["tab_1", "tab_2", "tab_3", "tab_4", "item_1", "item_2", "item_3", "item_4"]
-    },
-    "membership_promo": {
-      "type": "membership-promo",
+    "blog_carousel_2": {
+      "type": "blog-carousel",
       "settings": {
-        "heading": "Become a Member",
-        "description": "Get unlimited access to all itineraries, exclusive content, and early access to new editions.",
-        "link_text": "Learn More"
+        "heading": "Latest Posts",
+        "articles_limit": 8,
+        "show_view_all": true,
+        "excerpt_length": 100
       }
     }
   },
   "order": [
     "hero_featured",
     "welcome",
-    "edition_featured",
+    "blog_carousel",
     "testimonials",
-    "categories",
-    "membership_promo"
+    "blog_carousel_2"
   ]
 }

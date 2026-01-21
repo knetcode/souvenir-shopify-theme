@@ -28,8 +28,8 @@
         {%- comment -%} Price Display - Free or Regular {%- endcomment -%}
         <div class="mb-6">
           {%- if product.price == 0 -%}
-            {%- comment -%} FREE: Show Free label {%- endcomment -%}
-            <p class="text-2xl font-bold">Free</p>
+            {%- comment -%} FREE: Show FREE label {%- endcomment -%}
+            <p class="text-2xl font-bold">FREE</p>
           {%- else -%}
             {%- comment -%} REGULAR: Show normal price {%- endcomment -%}
             <p class="text-2xl">{{ product.price | money }}</p>

@@ -12,7 +12,7 @@
       "type": "color",
       "id": "announcement_bar_color",
       "label": "Announcement Bar Background Color",
-      "default": "#f8d4ce"
+      "default": "#40100D"
     }
   ]
 }
@@ -21,9 +21,9 @@
 <header class="w-full">
   {%- if section.settings.announcement_text != blank -%}
     {%- liquid
-      assign announcement_bg_color = section.settings.announcement_bar_color | default: settings.color_pink | default: '#f8d4ce'
+      assign announcement_bg_color = section.settings.announcement_bar_color | default: settings.color_pink | default: '#40100D'
     -%}
-    <div class="text-center px-4 text-sm announcement-bar" style="background-color: {{ announcement_bg_color }};">
+    <div class="text-center px-4 text-sm announcement-bar text-white" style="background-color: {{ announcement_bg_color }};">
       <p>{{ section.settings.announcement_text }}</p>
     </div>
   {%- endif -%}

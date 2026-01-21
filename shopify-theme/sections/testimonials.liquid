@@ -1,6 +1,14 @@
 {% schema %}
 {
   "name": "Testimonials",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    }
+  ],
   "blocks": [
     {
       "type": "testimonial",
@@ -22,13 +30,13 @@
 }
 {% endschema %}
 
-<section class="py-16 px-6 border-t border-gray-100">
+<section class="py-16 px-6 border-t border-gray-100" style="background-color: {{ section.settings.background_color | default: '#ffffff' }};">
   <div class="container">
-    <div class="grid md:grid-cols-3 gap-8 text-center">
+    <div class="flex flex-row gap-8 text-center justify-center items-start">
       {%- for block in section.blocks -%}
-        <div>
+        <div class="flex-1">
           <p class="italic text-xl mb-4">{{ block.settings.text }}</p>
-          <p class="text-sm">– {{ block.settings.author }}</p>
+          <p class="text-sm italic">– {{ block.settings.author }}</p>
         </div>
       {%- endfor -%}
     </div>
