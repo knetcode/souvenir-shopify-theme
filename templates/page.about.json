@@ -7,18 +7,10 @@
         "background_color": "#e8ff75"
       }
     },
-    "content": {
-      "type": "page-about-content",
-      "settings": {}
-    },
-    "team": {
-      "type": "page-team",
-      "settings": {}
-    },
     "contact": {
       "type": "page-contact",
       "settings": {}
     }
   },
-  "order": ["hero", "content", "team", "contact"]
+  "order": ["hero", "contact"]
 }

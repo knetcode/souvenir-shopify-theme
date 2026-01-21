@@ -30,12 +30,30 @@
       "id": "text_color",
       "label": "Text Color"
     }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
   ]
 }
 {% endschema %}
 
-<section class="py-16 px-6 text-center"{% if section.settings.background_color %} style="background-color: {{ section.settings.background_color }};"{% endif %}{% if section.settings.text_color %} style="color: {{ section.settings.text_color }};"{% endif %}>
-  <h3 class="text-2xl md:text-3xl italic mb-8"{% if section.settings.text_color %} style="color: {{ section.settings.text_color }};"{% endif %}>
+<section
+  class="py-16 px-6 text-center"
+  {% if section.settings.background_color %}
+    style="background-color: {{ section.settings.background_color }};"
+  {% endif -%}
+  {% if section.settings.text_color %}
+    style="color: {{ section.settings.text_color }};"
+  {% endif %}
+>
+  <h3
+    class="text-2xl md:text-3xl italic mb-8"
+    {% if section.settings.text_color %}
+      style="color: {{ section.settings.text_color }};"
+    {% endif %}
+  >
     {{ section.settings.heading }}
   </h3>
   {% form 'customer', class: 'flex flex-col items-center gap-4' %}
@@ -46,7 +64,13 @@
       class="newsletter-input text-center"
       required
     >
-    <button type="submit" class="text-sm uppercase tracking-wide underline underline-offset-4 hover:opacity-70 transition-opacity"{% if section.settings.text_color %} style="color: {{ section.settings.text_color }};"{% endif %}>
+    <button
+      type="submit"
+      class="text-sm uppercase tracking-wide underline underline-offset-4 hover:opacity-70 transition-opacity"
+      {% if section.settings.text_color %}
+        style="color: {{ section.settings.text_color }};"
+      {% endif %}
+    >
       {{ section.settings.button_text }}
     </button>
   {% endform %}
@@ -56,11 +80,11 @@
   .underline-offset-4 {
     text-underline-offset: 4px;
   }
-  
+
   .opacity-70 {
     opacity: 0.7;
   }
-  
+
   .transition-opacity {
     transition-property: opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

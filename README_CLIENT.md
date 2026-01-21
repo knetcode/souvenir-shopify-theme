@@ -257,7 +257,6 @@ For souvenirs and physical items:
 
 1. Click **Footer** section
 2. Configure:
-   - Newsletter heading
    - Footer content
    - Links (auto-populates from Footer menu)
 
