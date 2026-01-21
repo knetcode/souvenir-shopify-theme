@@ -18,14 +18,18 @@
         "link_text": "Discover more"
       }
     },
-    "blog_carousel": {
-      "type": "blog-carousel",
-      "settings": {
-        "heading": "Latest Posts",
-        "articles_limit": 8,
-        "show_view_all": true,
-        "excerpt_length": 100
-      }
+    "edition": {
+      "type": "edition",
+      "blocks": {
+        "edition_1": {
+          "type": "edition",
+          "settings": {
+            "title": "Edition One",
+            "articles_limit": 4
+          }
+        }
+      },
+      "block_order": ["edition_1"]
     },
     "testimonials": {
       "type": "testimonials",
@@ -54,7 +58,7 @@
       },
       "block_order": ["testimonial_1", "testimonial_2", "testimonial_3"]
     },
-    "blog_carousel_2": {
+    "blog_carousel": {
       "type": "blog-carousel",
       "settings": {
         "heading": "Latest Posts",
@@ -62,13 +66,24 @@
         "show_view_all": true,
         "excerpt_length": 100
       }
+    },
+    "text_image": {
+      "type": "text-image",
+      "settings": {
+        "heading": "Heading",
+        "content": "<p>Add your text content here.</p>",
+        "background_color": "#ffffff",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
     }
   },
   "order": [
     "hero_featured",
     "welcome",
-    "blog_carousel",
+    "edition",
     "testimonials",
-    "blog_carousel_2"
+    "blog_carousel",
+    "text_image"
   ]
 }
