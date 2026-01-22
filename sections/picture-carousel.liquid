@@ -10,6 +10,7 @@
     style="
       --section-padding-top: {{ section.settings.padding_top }}px;
       --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+      background-color: {{ section.settings.background_color | default: '#ffffff' }};
     "
   >
     <div class="container">
@@ -27,27 +28,61 @@
           </svg>
         </button>
 
-        <div class="picture-carousel flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+        <div class="picture-carousel">
           {%- for block in section.blocks -%}
-            <div class="picture-card flex-shrink-0 w-64 md:w-80 snap-start">
+            <div class="picture-card" {{ block.shopify_attributes }}>
               {%- if block.settings.image != blank -%}
-                <div class="relative aspect-4-5 overflow-hidden">
-                  {{
-                    block.settings.image
-                    | image_url: width: 400
-                    | image_tag:
-                      loading: 'lazy',
-                      alt: block.settings.alt_text | default: 'Image',
-                      class: 'picture-card-image absolute inset-0 w-full h-full object-cover'
-                  }}
-                </div>
+                {%- if block.settings.link != blank -%}
+                  <a href="{{ block.settings.link }}"{% if block.settings.link_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %} class="picture-card-link">
+                {%- endif -%}
+                    <div class="picture-card-image-wrapper">
+                      {{
+                        block.settings.image
+                        | image_url: width: 400
+                        | image_tag:
+                          loading: 'lazy',
+                          alt: block.settings.alt_text | default: block.settings.caption | default: 'Image',
+                          class: 'picture-card-image'
+                      }}
+                    </div>
+                {%- if block.settings.link != blank -%}
+                  </a>
+                {%- endif -%}
               {%- else -%}
-                <div class="relative aspect-4-5 overflow-hidden bg-gray-100 flex items-center justify-center">
+                <div class="picture-card-placeholder">
                   <span class="text-gray text-sm">No image</span>
                 </div>
               {%- endif -%}
+
+              {%- if section.settings.show_captions -%}
+                {%- if block.settings.label != blank -%}
+                  <p class="picture-card-category">
+                    {{ block.settings.label }}
+                  </p>
+                {%- endif -%}
+
+                {%- if block.settings.caption != blank -%}
+                  <h3 class="picture-card-title">
+                    {{ block.settings.caption }}
+                  </h3>
+                {%- endif -%}
+
+                {%- if block.settings.description != blank -%}
+                  <p class="picture-card-excerpt">
+                    {{ block.settings.description }}
+                  </p>
+                {%- endif -%}
+              {%- endif -%}
             </div>
           {%- endfor -%}
+
+          {%- if section.settings.show_view_all and section.settings.view_all_link != blank -%}
+            <div class="picture-card picture-card-view-all">
+              <a href="{{ section.settings.view_all_link }}" class="btn-primary">
+                {{ section.settings.view_all_text }}
+              </a>
+            </div>
+          {%- endif -%}
         </div>
 
         {%- comment -%} Next Arrow {%- endcomment -%}
@@ -77,25 +112,21 @@
   /* Carousel wrapper with arrows */
   .{{ section_class }} .picture-carousel-wrapper {
     position: relative;
-    width: calc(100% + 3rem);
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
   }
 
+  /* Carousel container */
   .{{ section_class }} .picture-carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding-left: 48px;
-    padding-right: 48px;
-  }
-
-  .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
+  .{{ section_class }} .picture-carousel::-webkit-scrollbar {
     display: none;
   }
 
@@ -129,11 +160,11 @@
   }
 
   .{{ section_class }} .carousel-arrow-prev {
-    left: 1.5rem;
+    left: -24px;
   }
 
   .{{ section_class }} .carousel-arrow-next {
-    right: 1.5rem;
+    right: -24px;
   }
 
   @media (max-width: 768px) {
@@ -142,25 +173,12 @@
       height: 40px;
     }
 
-    .{{ section_class }} .picture-carousel-wrapper {
-      width: calc(100% + 3rem);
-      margin-left: -1.5rem;
-      margin-right: -1.5rem;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
-    .{{ section_class }} .picture-carousel {
-      padding-left: 40px;
-      padding-right: 40px;
-    }
-
     .{{ section_class }} .carousel-arrow-prev {
-      left: 1.5rem;
+      left: -12px;
     }
 
     .{{ section_class }} .carousel-arrow-next {
-      right: 1.5rem;
+      right: -12px;
     }
   }
 
@@ -188,13 +206,87 @@
     transition: width 0.1s ease, left 0.1s ease;
   }
 
-  /* Card image positioning - overrides global img height:auto */
+  /* Card styling - fixed width for uniform appearance */
+  .{{ section_class }} .picture-card {
+    flex-shrink: 0;
+    width: 256px;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 768px) {
+    .{{ section_class }} .picture-card {
+      width: 320px;
+    }
+  }
+
+  /* Card link styling */
+  .{{ section_class }} .picture-card-link {
+    display: block;
+  }
+
+  /* Card image container with 4:5 aspect ratio */
+  .{{ section_class }} .picture-card-image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  /* Placeholder for missing images */
+  .{{ section_class }} .picture-card-placeholder {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Card image - absolute positioning to fill container */
   .{{ section_class }} .picture-card-image {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .{{ section_class }} .picture-card:hover .picture-card-image {
+    transform: scale(1.05);
+  }
+
+  /* Typography */
+  .{{ section_class }} .picture-card-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+  }
+
+  .{{ section_class }} .picture-card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .{{ section_class }} .picture-card-excerpt {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* View All card styling */
+  .{{ section_class }} .picture-card-view-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 {% endstylesheet %}
 
@@ -255,6 +347,48 @@
       "label": "Heading"
     },
     {
+      "type": "header",
+      "content": "Display Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_captions",
+      "label": "Show image captions",
+      "default": false,
+      "info": "Display label, title, and description below images"
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' button",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All link"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All button text",
+      "default": "View All"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
       "type": "text",
       "id": "custom_id",
       "label": "Custom Section ID"
@@ -294,7 +428,43 @@
           "type": "text",
           "id": "alt_text",
           "label": "Alt Text",
-          "info": "Optional alt text for accessibility"
+          "info": "Describe the image for accessibility"
+        },
+        {
+          "type": "header",
+          "content": "Caption (optional)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "Small text above the title (e.g., category)"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "header",
+          "content": "Link"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link",
+          "info": "Optional link when image is clicked"
+        },
+        {
+          "type": "checkbox",
+          "id": "link_new_tab",
+          "label": "Open link in new tab",
+          "default": false
         }
       ]
     }

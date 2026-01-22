@@ -24,6 +24,52 @@
       "id": "link_text",
       "label": "Link Text",
       "default": "Discover more"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label Color",
+      "default": "#6b6b6b"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
     }
   ],
   "presets": [
@@ -34,15 +80,23 @@
 }
 {% endschema %}
 
-<section class="py-16 px-6 text-center max-w-3xl mx-auto">
-  <p class="text-xs uppercase tracking-wider text-gray mb-4">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#1a1a1a'
+  assign label_color = section.settings.label_color | default: '#6b6b6b'
+  assign padding_top = section.settings.padding_top | default: 64
+  assign padding_bottom = section.settings.padding_bottom | default: 64
+-%}
+
+<section class="px-6 text-center max-w-3xl mx-auto" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+  <p class="text-xs uppercase tracking-wider mb-4" style="color: {{ label_color }};">
     {{ section.settings.label }}
   </p>
-  <h2 class="text-2xl md:text-3xl lg:text-4xl leading-relaxed mb-6">
+  <h2 class="text-2xl md:text-3xl lg:text-4xl leading-relaxed mb-6" style="color: {{ text_color }};">
     {{ section.settings.heading }}
   </h2>
   {%- if section.settings.link != blank -%}
-    <a href="{{ section.settings.link }}" class="read-more">
+    <a href="{{ section.settings.link }}" class="read-more" style="color: {{ text_color }};">
       {{ section.settings.link_text }}
     </a>
   {%- endif -%}

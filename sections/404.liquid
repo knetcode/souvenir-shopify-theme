@@ -1,7 +1,76 @@
 {% schema %}
 {
   "name": "404",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "404"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Page not found"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Back to Home"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#6b6b6b"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
   "presets": [
     {
       "name": "404"
@@ -10,12 +79,23 @@
 }
 {% endschema %}
 
-<div class="py-16 px-6 text-center">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#1a1a1a'
+  assign subtext_color = section.settings.subtext_color | default: '#6b6b6b'
+  assign padding_top = section.settings.padding_top | default: 64
+  assign padding_bottom = section.settings.padding_bottom | default: 64
+  assign heading = section.settings.heading | default: '404'
+  assign subtext = section.settings.subtext | default: 'general.404.subtext' | t
+  assign button_text = section.settings.button_text | default: 'general.404.back_home' | t | default: 'Back to Home'
+-%}
+
+<div class="px-6 text-center" style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
   <div class="container max-w-2xl mx-auto">
-    <h1 class="text-4xl md:text-5xl mb-4">404</h1>
-    <p class="text-xl text-gray mb-8">{{ 'general.404.subtext' | t }}</p>
+    <h1 class="text-4xl md:text-5xl mb-4" style="color: {{ text_color }};">{{ heading }}</h1>
+    <p class="text-xl mb-8" style="color: {{ subtext_color }};">{{ subtext }}</p>
     <a href="{{ routes.root_url }}" class="btn-primary">
-      {{ 'general.404.back_home' | t | default: 'Back to Home' }}
+      {{ button_text }}
     </a>
   </div>
 </div>

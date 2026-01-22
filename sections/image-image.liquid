@@ -3,14 +3,50 @@
   "name": "Image Image",
   "settings": [
     {
+      "type": "header",
+      "content": "Image 1"
+    },
+    {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1"
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "image_1_link",
+      "label": "Image Link",
+      "info": "Optional link when image is clicked"
+    },
+    {
+      "type": "checkbox",
+      "id": "image_1_link_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Image 2"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Image 2"
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "image_2_link",
+      "label": "Image Link",
+      "info": "Optional link when image is clicked"
+    },
+    {
+      "type": "checkbox",
+      "id": "image_2_link_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
     },
     {
       "type": "color",
@@ -62,22 +98,42 @@
       {%- comment -%} Image 1 {%- endcomment -%}
       {%- if section.settings.image_1 != blank -%}
         <div class="relative">
-          {{
-            section.settings.image_1
-            | image_url: width: 800
-            | image_tag: loading: 'lazy', alt: 'Image 1', class: 'w-full h-auto object-cover'
-          }}
+          {%- if section.settings.image_1_link != blank -%}
+            <a href="{{ section.settings.image_1_link }}"{% if section.settings.image_1_link_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>
+              {{
+                section.settings.image_1
+                | image_url: width: 800
+                | image_tag: loading: 'lazy', alt: 'Image 1', class: 'w-full h-auto object-cover'
+              }}
+            </a>
+          {%- else -%}
+            {{
+              section.settings.image_1
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', alt: 'Image 1', class: 'w-full h-auto object-cover'
+            }}
+          {%- endif -%}
         </div>
       {%- endif -%}
 
       {%- comment -%} Image 2 {%- endcomment -%}
       {%- if section.settings.image_2 != blank -%}
         <div class="relative">
-          {{
-            section.settings.image_2
-            | image_url: width: 800
-            | image_tag: loading: 'lazy', alt: 'Image 2', class: 'w-full h-auto object-cover'
-          }}
+          {%- if section.settings.image_2_link != blank -%}
+            <a href="{{ section.settings.image_2_link }}"{% if section.settings.image_2_link_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>
+              {{
+                section.settings.image_2
+                | image_url: width: 800
+                | image_tag: loading: 'lazy', alt: 'Image 2', class: 'w-full h-auto object-cover'
+              }}
+            </a>
+          {%- else -%}
+            {{
+              section.settings.image_2
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', alt: 'Image 2', class: 'w-full h-auto object-cover'
+            }}
+          {%- endif -%}
         </div>
       {%- endif -%}
     </div>

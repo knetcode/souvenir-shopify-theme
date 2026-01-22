@@ -8,10 +8,50 @@
       "label": "Collection"
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
       "type": "color",
       "id": "background_color",
       "label": "Background Color",
       "default": "#f8d4ce"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
     }
   ],
   "blocks": [
@@ -63,8 +103,12 @@
 
 {%- liquid
   assign bg_color = section.settings.background_color | default: settings.color_pink | default: '#f8d4ce'
+  assign text_color = section.settings.text_color | default: '#1a1a1a'
+  assign card_bg = section.settings.card_background | default: '#ffffff'
+  assign padding_top = section.settings.padding_top | default: 48
+  assign padding_bottom = section.settings.padding_bottom | default: 48
 -%}
-<section class="py-12 px-6" style="background-color: {{ bg_color }};">
+<section class="px-6" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
   <div class="container">
     {%- assign tabs = section.blocks | where: 'type', 'category_tab' -%}
     {%- if tabs.size > 0 -%}
@@ -81,7 +125,7 @@
     {%- if items.size > 0 -%}
       <div class="grid md:grid-cols-4 gap-6">
         {%- for block in items -%}
-          <article class="group bg-white">
+          <article class="group" style="background-color: {{ card_bg }};">
             {%- if block.settings.image != blank -%}
               <div class="relative aspect-4-3 overflow-hidden">
                 {{

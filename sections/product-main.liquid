@@ -8,6 +8,32 @@
       "label": "Free Product Message",
       "default": "This itinerary is currently available for free during our MVP launch.",
       "info": "Message displayed when product price is $0.00"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to Cart Button Text",
+      "default": "Add to Cart"
     }
   ],
   "presets": [
@@ -18,26 +44,32 @@
 }
 {% endschema %}
 
-<div class="py-8 px-6">
-  <div class="container">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#1a1a1a'
+  assign add_to_cart_text = section.settings.add_to_cart_text | default: 'Add to Cart'
+-%}
+
+<div class="product-main-wrapper" style="background-color: {{ bg_color }}; color: {{ text_color }};">
+  <div class="container product-main-container">
     {%- if product.type != blank -%}
-      <p class="text-gray mb-8">{{ product.type }}</p>
+      <p class="product-type">{{ product.type }}</p>
     {%- endif -%}
 
     {%- comment -%} Product Section {%- endcomment -%}
-    <div class="grid md:grid-cols-2 gap-12 mb-16">
+    <div class="product-grid">
       {%- comment -%} Product Info {%- endcomment -%}
-      <div>
-        <h1 class="text-3xl md:text-4xl mb-2">{{ product.title }}</h1>
+      <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
 
         {%- comment -%} Price Display - Free or Regular {%- endcomment -%}
-        <div class="mb-6">
+        <div class="product-price-wrapper">
           {%- if product.price == 0 -%}
             {%- comment -%} FREE: Show FREE label {%- endcomment -%}
-            <p class="text-2xl font-bold">FREE</p>
+            <p class="product-price product-price-free">FREE</p>
           {%- else -%}
             {%- comment -%} REGULAR: Show normal price {%- endcomment -%}
-            <p class="text-2xl">{{ product.price | money }}</p>
+            <p class="product-price">{{ product.price | money }}</p>
           {%- endif -%}
         </div>
 
@@ -47,9 +79,9 @@
             {%- comment -%} Variants {%- endcomment -%}
             {%- unless product.has_only_default_variant -%}
               {%- for option in product.options_with_values -%}
-                <div class="mb-6">
-                  <p class="text-sm uppercase tracking-wide mb-3">{{ option.name }}</p>
-                  <div class="flex gap-3">
+                <div class="product-variant-option">
+                  <p class="product-variant-label">{{ option.name }}</p>
+                  <div class="product-variant-values">
                     {%- for value in option.values -%}
                       <input
                         type="radio"
@@ -74,12 +106,12 @@
             {%- endunless -%}
 
             {%- comment -%} Quantity {%- endcomment -%}
-            <div class="mb-6">
-              <p class="text-sm uppercase tracking-wide mb-3">Qty</p>
-              <div class="flex items-center gap-4">
+            <div class="product-quantity-wrapper">
+              <p class="product-quantity-label">Qty</p>
+              <div class="product-quantity-controls">
                 <button
                   type="button"
-                  class="w-8 h-8 border border-gray-300 flex items-center justify-center hover:border-foreground quantity-decrease"
+                  class="quantity-button quantity-decrease"
                 >
                   -
                 </button>
@@ -88,12 +120,12 @@
                   name="quantity"
                   value="1"
                   min="1"
-                  class="quantity-input text-center w-12"
+                  class="quantity-input"
                   id="quantity"
                 >
                 <button
                   type="button"
-                  class="w-8 h-8 border border-gray-300 flex items-center justify-center hover:border-foreground quantity-increase"
+                  class="quantity-button quantity-increase"
                 >
                   +
                 </button>
@@ -103,16 +135,16 @@
             {%- comment -%} Add to Cart Button {%- endcomment -%}
             <button
               type="submit"
-              class="w-full bg-foreground text-white py-4 text-sm uppercase tracking-wide hover:bg-transparent hover:text-foreground border border-foreground transition-colors mb-8"
+              class="product-add-to-cart-button"
             >
-              Add to Cart
+              {{ add_to_cart_text }}
             </button>
           {% endform %}
         {%- else -%}
           {%- comment -%} FREE PRODUCT: Show message instead of form {%- endcomment -%}
           {%- assign free_message = section.settings.free_product_message | default: "This itinerary is currently available for free during our MVP launch." -%}
-          <div class="mb-8 p-4 bg-gray-50 border border-gray-200">
-            <p class="text-sm text-gray-600">{{ free_message }}</p>
+          <div class="product-free-message">
+            <p class="product-free-message-text">{{ free_message }}</p>
           </div>
         {%- endif -%}
 
@@ -125,28 +157,28 @@
       </div>
 
       {%- comment -%} Product Images {%- endcomment -%}
-      <div>
+      <div class="product-images">
         {%- if product.featured_image != blank -%}
-          <div class="relative aspect-square overflow-hidden mb-4">
+          <div class="product-image-main-wrapper">
             {{
               product.featured_image
               | image_url: width: 600
-              | image_tag: loading: 'eager', alt: product.title, class: 'object-cover', id: 'product-image-main'
+              | image_tag: loading: 'eager', alt: product.title, class: 'product-image-main', id: 'product-image-main'
             }}
           </div>
         {%- endif -%}
 
         {%- if product.images.size > 1 -%}
-          <div class="flex gap-2">
+          <div class="product-thumbnails">
             {%- for image in product.images limit: 5 -%}
               <button
-                class="relative w-16 h-16 overflow-hidden border-2 border-transparent hover:border-foreground product-thumbnail"
+                class="product-thumbnail"
                 data-image-url="{{ image | image_url: width: 600 }}"
               >
                 {{
                   image
                   | image_url: width: 100
-                  | image_tag: loading: 'lazy', alt: product.title, class: 'object-cover'
+                  | image_tag: loading: 'lazy', alt: product.title, class: 'product-thumbnail-image'
                 }}
               </button>
             {%- endfor -%}
@@ -311,16 +343,195 @@
 </script>
 
 <style>
+  /* Product Main Wrapper */
+  .product-main-wrapper {
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .product-main-wrapper {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  .product-main-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .product-type {
+    color: var(--gray);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 640px) {
+    .product-type {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+  }
+
+  /* Product Grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .product-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-grid {
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+  }
+
+  /* Product Info */
+  .product-info {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .product-info {
+      order: 1;
+    }
+  }
+
+  .product-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  @media (min-width: 640px) {
+    .product-title {
+      font-size: 1.875rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .product-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  .product-price-wrapper {
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .product-price-wrapper {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .product-price {
+    font-size: 1.25rem;
+    width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+
+  @media (min-width: 640px) {
+    .product-price {
+      font-size: 1.5rem;
+    }
+  }
+
+  .product-price-free {
+    font-weight: bold;
+  }
+
+  /* Product Form */
+  form#product-form {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Variant Options */
+  .product-variant-option {
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .product-variant-option {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .product-variant-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+  }
+
+  @media (min-width: 640px) {
+    .product-variant-label {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .product-variant-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .product-variant-values {
+      gap: 0.75rem;
+    }
+  }
+
   .variant-option {
     display: none;
   }
 
   .variant-label {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 0.375rem 0.75rem;
     border: 1px solid var(--gray-200);
     cursor: pointer;
     transition: border-color 0.2s;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 640px) {
+    .variant-label {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
   }
 
   .variant-option:checked + .variant-label,
@@ -328,24 +539,296 @@
     border-color: var(--foreground);
   }
 
-  .w-full {
+  /* Quantity Controls */
+  .product-quantity-wrapper {
+    margin-bottom: 1rem;
     width: 100%;
+    max-width: 100%;
   }
 
-  .w-12 {
-    width: 3rem;
+  @media (min-width: 640px) {
+    .product-quantity-wrapper {
+      margin-bottom: 1.5rem;
+    }
   }
 
-  .h-8 {
+  .product-quantity-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .product-quantity-label {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .product-quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .product-quantity-controls {
+      gap: 1rem;
+    }
+  }
+
+  .quantity-button {
+    width: 2rem;
     height: 2rem;
+    border: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0;
+  }
+
+  .quantity-button:hover {
+    border-color: var(--foreground);
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .quantity-button:active {
+    transform: scale(0.95);
+  }
+
+  .quantity-input {
+    width: 3rem;
+    height: 2rem;
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    padding: 0;
+    font-size: 1rem;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+    transition: border-color 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    box-sizing: border-box;
+  }
+
+  .quantity-input:focus {
+    outline: none;
+    border-color: var(--foreground);
+    box-shadow: none;
+  }
+
+  .quantity-input:focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 2px;
+    border-color: var(--foreground);
+  }
+
+  .quantity-input::-webkit-inner-spin-button,
+  .quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .quantity-input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  .quantity-input::-webkit-inner-spin-button,
+  .quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .quantity-input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  /* Add to Cart Button */
+  .product-add-to-cart-button {
+    width: 100%;
+    max-width: 100%;
+    background: var(--foreground);
+    color: var(--white);
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .product-add-to-cart-button {
+      padding: 1rem;
+      font-size: 0.875rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .product-add-to-cart-button:hover {
+    background: transparent;
+    color: var(--foreground);
+  }
+
+  /* Free Product Message */
+  .product-free-message {
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+  }
+
+  @media (min-width: 640px) {
+    .product-free-message {
+      margin-bottom: 2rem;
+      padding: 1rem;
+    }
+  }
+
+  .product-free-message-text {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+  }
+
+  @media (min-width: 640px) {
+    .product-free-message-text {
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Product Description */
+  .product-description-intro {
+    color: var(--gray);
+    font-size: 0.875rem;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .product-description-intro p,
+  .product-description-intro span {
+    width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  @media (min-width: 640px) {
+    .product-description-intro {
+      font-size: 1rem;
+    }
+  }
+
+  /* Product Images */
+  .product-images {
+    order: 1;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .product-images {
+      order: 2;
+      margin-bottom: 0;
+    }
+  }
+
+  .product-image-main-wrapper {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .product-image-main-wrapper {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .product-image-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-thumbnails {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .product-thumbnails {
+      overflow-x: visible;
+      padding-bottom: 0;
+    }
+  }
+
+  .product-thumbnail {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    transition: border-color 0.2s;
+  }
+
+  @media (min-width: 640px) {
+    .product-thumbnail {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+
+  .product-thumbnail:hover {
+    border-color: var(--foreground);
+  }
+
+  .product-thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* Accordion Container - Full Width */
   .product-description-accordion-container {
     width: 100%;
-    margin-top: 3rem;
-    padding-top: 3rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
     border-top: none;
+  }
+
+  @media (min-width: 640px) {
+    .product-description-accordion-container {
+      margin-top: 3rem;
+      padding-top: 3rem;
+    }
   }
 
   /* Accordion Styles */
@@ -362,15 +845,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 0;
+    padding: 1rem 0;
     text-align: left;
     background: none;
     border: none;
     cursor: pointer;
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: var(--foreground);
     transition: opacity 0.2s ease;
+  }
+
+  @media (min-width: 640px) {
+    .accordion-button {
+      padding: 1.25rem 0;
+      font-size: 1rem;
+    }
   }
 
   .accordion-button:hover {
@@ -392,9 +882,17 @@
   }
 
   .accordion-panel {
-    padding-bottom: 1.25rem;
+    padding-bottom: 1rem;
     padding-left: 0;
     animation: slideDown 0.3s ease;
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 640px) {
+    .accordion-panel {
+      padding-bottom: 1.25rem;
+      font-size: 1rem;
+    }
   }
 
   @keyframes slideDown {

@@ -1,7 +1,94 @@
 {% schema %}
 {
   "name": "Page Content",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Access Control"
+    },
+    {
+      "type": "checkbox",
+      "id": "require_login",
+      "label": "Require login to view",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "access_type",
+      "label": "Access type",
+      "options": [
+        { "value": "login", "label": "Login only" },
+        { "value": "membership", "label": "Membership required" },
+        { "value": "paywall", "label": "Paywall (purchased product)" }
+      ],
+      "default": "login",
+      "info": "Only applies when 'Require login' is enabled"
+    },
+    {
+      "type": "text",
+      "id": "paywall_product_handle",
+      "label": "Paywall product handle",
+      "info": "For 'Paywall' only. Product handle that grants access (e.g. premium-content-pass)"
+    },
+    {
+      "type": "text",
+      "id": "membership_tag",
+      "label": "Membership tag",
+      "info": "For 'Membership' only. Customer tag required (e.g. member-active)"
+    },
+    {
+      "type": "text",
+      "id": "login_message",
+      "label": "Access denied message",
+      "default": "Please log in to view this content."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#6b6b6b"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
   "presets": [
     {
       "name": "Page Content"
@@ -10,11 +97,53 @@
 }
 {% endschema %}
 
-<div class="py-8 px-6">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign heading_color = section.settings.heading_color | default: '#1a1a1a'
+  assign text_color = section.settings.text_color | default: '#6b6b6b'
+  assign padding_top = section.settings.padding_top | default: 32
+  assign padding_bottom = section.settings.padding_bottom | default: 32
+  assign require_login = section.settings.require_login
+  assign access_type = section.settings.access_type | default: 'login'
+  assign login_message = section.settings.login_message | default: 'Please log in to view this content.'
+  assign paywall_handle = section.settings.paywall_product_handle
+  assign membership_tag = section.settings.membership_tag
+-%}
+
+{%- if require_login -%}
+  {%- if access_type == 'paywall' -%}
+    {%- render 'access-control', access_type: 'paywall', paywall_product_handle: paywall_handle -%}
+  {%- elsif access_type == 'membership' -%}
+    {%- render 'access-control', access_type: 'membership', membership_tag: membership_tag -%}
+  {%- else -%}
+    {%- render 'access-control', access_type: 'login' -%}
+  {%- endif -%}
+  {%- if login_message != blank -%}
+    {%- assign access_message = login_message -%}
+  {%- endif -%}
+{%- else -%}
+  {%- assign has_access = true -%}
+{%- endif -%}
+
+<div class="px-6" style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
   <div class="container">
-    <h1 class="text-3xl md:text-4xl mb-8">{{ page.title }}</h1>
-    <div class="prose max-w-none">
-      {{ page.content }}
-    </div>
+    {%- if has_access -%}
+      <h1 class="text-3xl md:text-4xl mb-8" style="color: {{ heading_color }};">{{ page.title }}</h1>
+      <div class="prose max-w-none" style="color: {{ text_color }};">
+        {{ page.content }}
+      </div>
+    {%- else -%}
+      <div class="page-content__restricted" style="padding: 4rem 0; text-align: center;">
+        {%- if customer -%}
+          <h1 class="text-3xl md:text-4xl mb-4" style="color: {{ heading_color }};">Unlock This Content</h1>
+        {%- else -%}
+          <h1 class="text-3xl md:text-4xl mb-4" style="color: {{ heading_color }};">Login Required</h1>
+        {%- endif -%}
+        <p class="text-lg mb-8" style="color: {{ text_color }};">{{ access_message }}</p>
+        <a href="{{ redirect_url }}" class="btn-primary">
+          {%- if customer -%}Purchase Access{%- else -%}Log In{%- endif -%}
+        </a>
+      </div>
+    {%- endif -%}
   </div>
 </div>

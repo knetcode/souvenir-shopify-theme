@@ -1,6 +1,7 @@
-product collection carousel
-product carousel
-double check login 
-bounding mobile 
-page carousel
- 
+[x] - page carousel
+[x] - editions pages instead of blog
+[x] - product collection carousel
+[x] - product carousel
+[x] - bounding mobile 
+[ ] - setup on Lucy shopify
+[ ] - double check login

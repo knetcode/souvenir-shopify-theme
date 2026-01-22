@@ -10,6 +10,56 @@
       "max": 24,
       "step": 4,
       "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Button Text",
+      "default": "View All"
     }
   ],
   "presets": [
@@ -20,7 +70,15 @@
 }
 {% endschema %}
 
-<div class="px-6 pb-8">
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#1a1a1a'
+  assign padding_top = section.settings.padding_top | default: 0
+  assign padding_bottom = section.settings.padding_bottom | default: 32
+  assign view_all_text = section.settings.view_all_text | default: 'View All'
+-%}
+
+<div class="px-6" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
   <div class="container">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
       {%- for product in collection.products limit: section.settings.products_per_page -%}
@@ -31,7 +89,7 @@
     {%- if collection.products.size > section.settings.products_per_page -%}
       <div class="text-center mt-12">
         <a href="{{ collection.url }}" class="btn-primary">
-          View All
+          {{ view_all_text }}
         </a>
       </div>
     {%- endif -%}

@@ -3,6 +3,10 @@
   "name": "Header",
   "settings": [
     {
+      "type": "header",
+      "content": "Announcement Bar"
+    },
+    {
       "type": "text",
       "id": "announcement_text",
       "label": "Announcement Bar Text",
@@ -13,22 +17,75 @@
       "id": "announcement_bar_color",
       "label": "Announcement Bar Background Color",
       "default": "#40100D"
+    },
+    {
+      "type": "color",
+      "id": "announcement_text_color",
+      "label": "Announcement Bar Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "color",
+      "id": "nav_background_color",
+      "label": "Navigation Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_text_color",
+      "label": "Navigation Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "nav_border_color",
+      "label": "Navigation Border Color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image",
+      "info": "Leave empty to use shop name"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "unit": "px",
+      "default": 120
     }
   ]
 }
 {% endschema %}
 
 <header class="w-full">
+{%- liquid
+  assign announcement_bg_color = section.settings.announcement_bar_color | default: '#40100D'
+  assign announcement_text_color = section.settings.announcement_text_color | default: '#ffffff'
+  assign nav_bg_color = section.settings.nav_background_color | default: '#ffffff'
+  assign nav_text_color = section.settings.nav_text_color | default: '#1a1a1a'
+  assign nav_border_color = section.settings.nav_border_color | default: '#f3f4f6'
+-%}
+
   {%- if section.settings.announcement_text != blank -%}
-    {%- liquid
-      assign announcement_bg_color = section.settings.announcement_bar_color | default: settings.color_pink | default: '#40100D'
-    -%}
-    <div class="text-center px-4 text-sm announcement-bar text-white" style="background-color: {{ announcement_bg_color }};">
+    <div class="text-center px-4 text-sm announcement-bar" style="background-color: {{ announcement_bg_color }}; color: {{ announcement_text_color }};">
       <p>{{ section.settings.announcement_text }}</p>
     </div>
   {%- endif -%}
 
-  <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-100 relative">
+  <nav class="flex items-center justify-between px-6 py-4 relative" style="background-color: {{ nav_bg_color }}; border-bottom: 1px solid {{ nav_border_color }}; color: {{ nav_text_color }};">
     {%- comment -%} Left Navigation {%- endcomment -%}
     <div class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wide flex-1">
       {%- for link in linklists.main-menu.links -%}
@@ -69,8 +126,12 @@
     </button>
 
     {%- comment -%} Logo {%- endcomment -%}
-    <a href="{{ routes.root_url }}" class="header-logo hidden lg:block absolute left-1/2 -translate-x-1/2 text-2xl lg:text-3xl tracking-wider pointer-events-auto z-10">
-      {{ shop.name | default: 'SOUVENIR' }}
+    <a href="{{ routes.root_url }}" class="header-logo hidden lg:block absolute left-1/2 -translate-x-1/2 text-2xl lg:text-3xl tracking-wider pointer-events-auto z-10" style="color: {{ nav_text_color }};">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: section.settings.logo_width | default: 120 | image_tag: alt: shop.name, class: 'header-logo-image' }}
+      {%- else -%}
+        {{ shop.name | default: 'SOUVENIR' }}
+      {%- endif -%}
     </a>
 
     {%- comment -%} Right Navigation {%- endcomment -%}
@@ -108,7 +169,7 @@
   </nav>
 
   {%- comment -%} Mobile Menu {%- endcomment -%}
-  <div class="md:hidden bg-white border-b border-gray-100 py-4 mobile-menu hidden">
+  <div class="md:hidden py-4 mobile-menu hidden" style="background-color: {{ nav_bg_color }}; border-bottom: 1px solid {{ nav_border_color }}; color: {{ nav_text_color }};">
     <div class="flex flex-col items-center gap-4 text-sm uppercase tracking-wide">
       {%- for link in linklists.main-menu.links -%}
         <a

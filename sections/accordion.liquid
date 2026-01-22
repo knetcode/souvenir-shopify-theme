@@ -12,6 +12,9 @@
       background-color: {{ section.settings.background_color | default: '#ffffff' }};
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
+      --accordion-heading-color: {{ section.settings.heading_color | default: '#1a1a1a' }};
+      --accordion-text-color: {{ section.settings.text_color | default: '#1a1a1a' }};
+      --accordion-border-color: {{ section.settings.border_color | default: '#e5e7eb' }};
     "
   >
     <div class="section-accordion__container">
@@ -72,6 +75,7 @@
       letter-spacing: 0.025em;
       font-weight: 400;
       line-height: 1.2;
+      color: var(--accordion-heading-color, #1a1a1a);
     }
 
     .section-accordion__list {
@@ -79,7 +83,7 @@
     }
 
     .section-accordion__item {
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--accordion-border-color, #e5e7eb);
     }
 
     .section-accordion__trigger {
@@ -105,6 +109,7 @@
       font-size: 1.125rem;
       font-weight: 500;
       padding-right: 1rem;
+      color: var(--accordion-text-color, #1a1a1a);
     }
 
     .section-accordion__icon {
@@ -136,6 +141,10 @@
 
     .section-accordion__inner p:last-child {
       margin-bottom: 0;
+    }
+
+    .section-accordion__inner {
+      color: var(--accordion-text-color, #1a1a1a);
     }
   </style>
 
@@ -192,10 +201,36 @@
       "label": "Heading"
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
       "type": "color",
       "id": "background_color",
       "label": "Background Color",
       "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "header",
+      "content": "Settings"
     },
     {
       "type": "checkbox",
@@ -207,6 +242,10 @@
       "type": "text",
       "id": "custom_id",
       "label": "Custom Section ID"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
     },
     {
       "type": "range",

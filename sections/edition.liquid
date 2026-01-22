@@ -3,12 +3,19 @@
   assign section_class = 'section-edition'
 -%}
 
+{%- liquid
+  assign bg_color = section.settings.background_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#1a1a1a'
+-%}
+
 <section
   id="{{ section_id }}"
   class="{{ section_class }} py-12 px-6"
   style="
     --section-padding-top: {{ section.settings.padding_top }}px;
     --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ bg_color }};
+    color: {{ text_color }};
   "
 >
   <div class="container">
@@ -27,19 +34,27 @@
             </p>
           {%- endif -%}
 
-          {%- comment -%} Combined Products and Articles Carousel {%- endcomment -%}
+          {%- comment -%} Combined Products and Pages Carousel {%- endcomment -%}
           {%- liquid
             assign has_products = false
-            assign has_articles = false
+            assign has_pages = false
             if block.settings.products != blank and block.settings.products.count > 0
               assign has_products = true
             endif
-            if block.settings.blog != blank and block.settings.blog.articles.size > 0
-              assign has_articles = true
-            endif
+            
+            comment
+              Check if any pages are selected (up to 8 page slots)
+            endcomment
+            for i in (1..8)
+              assign page_key = 'page_' | append: i
+              if block.settings[page_key] != blank
+                assign has_pages = true
+                break
+              endif
+            endfor
           -%}
 
-          {%- if has_products or has_articles -%}
+          {%- if has_products or has_pages -%}
             <div class="edition-carousel-container">
               {%- comment -%} Previous Arrow {%- endcomment -%}
               <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous">
@@ -94,45 +109,54 @@
                   {%- endfor -%}
                 {%- endif -%}
 
-                {%- comment -%} Articles {%- endcomment -%}
-                {%- if has_articles -%}
-                  {%- assign articles_limit = block.settings.articles_limit | default: 4 -%}
-                  {%- for article in block.settings.blog.articles limit: articles_limit -%}
-                    <article class="edition-card">
-                      <a href="{{ article.url }}">
-                        {%- if article.image != blank -%}
-                          <div class="edition-card-image-wrapper">
-                            {{
-                              article.image
-                              | image_url: width: 400
-                              | image_tag: loading: 'lazy', alt: article.title, class: 'edition-card-image'
-                            }}
-                          </div>
-                        {%- else -%}
-                          <div class="edition-card-placeholder">
-                            <span class="text-gray text-sm">No image</span>
-                          </div>
-                        {%- endif -%}
+                {%- comment -%} Pages {%- endcomment -%}
+                {%- if has_pages -%}
+                  {%- for i in (1..8) -%}
+                    {%- liquid
+                      assign page_key = 'page_' | append: i
+                      assign image_key = 'page_' | append: i | append: '_image'
+                      assign tag_key = 'page_' | append: i | append: '_tag'
+                      assign selected_page = block.settings[page_key]
+                      assign page_image = block.settings[image_key]
+                      assign page_tag = block.settings[tag_key]
+                    -%}
+                    {%- if selected_page != blank -%}
+                      <article class="edition-card">
+                        <a href="{{ selected_page.url }}">
+                          {%- if page_image != blank -%}
+                            <div class="edition-card-image-wrapper">
+                              {{
+                                page_image
+                                | image_url: width: 400
+                                | image_tag: loading: 'lazy', alt: selected_page.title, class: 'edition-card-image'
+                              }}
+                            </div>
+                          {%- else -%}
+                            <div class="edition-card-placeholder">
+                              <span class="text-gray text-sm">No image</span>
+                            </div>
+                          {%- endif -%}
 
-                        {%- if article.tags.size > 0 -%}
-                          <p class="edition-card-category">
-                            {{ article.tags.first }}
-                          </p>
-                        {%- endif -%}
+                          {%- if page_tag != blank -%}
+                            <p class="edition-card-category">
+                              {{ page_tag }}
+                            </p>
+                          {%- endif -%}
 
-                        <h3 class="edition-card-title">
-                          {{ article.title }}
-                        </h3>
+                          <h3 class="edition-card-title">
+                            {{ selected_page.title }}
+                          </h3>
 
-                        {%- if article.excerpt != blank -%}
-                          <p class="edition-card-excerpt">
-                            {{ article.excerpt | strip_html | truncate: 100 }}
-                          </p>
-                        {%- endif -%}
+                          {%- if selected_page.content != blank -%}
+                            <p class="edition-card-excerpt">
+                              {{ selected_page.content | strip_html | truncate: 100 }}
+                            </p>
+                          {%- endif -%}
 
-                        <span class="read-more text-sm">Read More</span>
-                      </a>
-                    </article>
+                          <span class="read-more text-sm">Read More</span>
+                        </a>
+                      </article>
+                    {%- endif -%}
                   {%- endfor -%}
                 {%- endif -%}
               </div>
@@ -400,6 +424,26 @@
       "label": "Custom Section ID"
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
       "type": "range",
       "id": "padding_top",
       "label": "Padding Top",
@@ -448,21 +492,155 @@
         },
         {
           "type": "header",
-          "content": "Blog Posts"
+          "content": "Page 1"
         },
         {
-          "type": "blog",
-          "id": "blog",
-          "label": "Select Blog"
+          "type": "page",
+          "id": "page_1",
+          "label": "Select Page"
         },
         {
-          "type": "range",
-          "id": "articles_limit",
-          "label": "Number of articles to show",
-          "min": 1,
-          "max": 20,
-          "step": 1,
-          "default": 4
+          "type": "image_picker",
+          "id": "page_1_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_1_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 2"
+        },
+        {
+          "type": "page",
+          "id": "page_2",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_2_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_2_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 3"
+        },
+        {
+          "type": "page",
+          "id": "page_3",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_3_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_3_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 4"
+        },
+        {
+          "type": "page",
+          "id": "page_4",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_4_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_4_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 5"
+        },
+        {
+          "type": "page",
+          "id": "page_5",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_5_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_5_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 6"
+        },
+        {
+          "type": "page",
+          "id": "page_6",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_6_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_6_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 7"
+        },
+        {
+          "type": "page",
+          "id": "page_7",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_7_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_7_tag",
+          "label": "Tag/Category Label"
+        },
+        {
+          "type": "header",
+          "content": "Page 8"
+        },
+        {
+          "type": "page",
+          "id": "page_8",
+          "label": "Select Page"
+        },
+        {
+          "type": "image_picker",
+          "id": "page_8_image",
+          "label": "Card Image"
+        },
+        {
+          "type": "text",
+          "id": "page_8_tag",
+          "label": "Tag/Category Label"
         }
       ]
     }
