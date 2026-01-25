@@ -78,8 +78,8 @@
   assign view_all_text = section.settings.view_all_text | default: 'View All'
 -%}
 
-<div class="px-6" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
-  <div class="container">
+<section style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+  <div class="container px-6">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
       {%- for product in collection.products limit: section.settings.products_per_page -%}
         {% render 'grid-card', item: product, type: 'product' %}
@@ -94,4 +94,4 @@
       </div>
     {%- endif -%}
   </div>
-</div>
+</section>

@@ -125,8 +125,8 @@
   {%- assign has_access = true -%}
 {%- endif -%}
 
-<div class="px-6" style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
-  <div class="container">
+<section style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+  <div class="container px-6">
     {%- if has_access -%}
       <h1 class="text-3xl md:text-4xl mb-8" style="color: {{ heading_color }};">{{ page.title }}</h1>
       <div class="prose max-w-none" style="color: {{ text_color }};">
@@ -146,4 +146,4 @@
       </div>
     {%- endif -%}
   </div>
-</div>
+</section>

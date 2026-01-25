@@ -90,8 +90,8 @@
   assign no_results_text = section.settings.no_results_text | default: 'general.search.no_results' | t | default: 'No results found'
 -%}
 
-<div class="px-6" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
-  <div class="container">
+<section style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+  <div class="container px-6">
     <h1 class="text-3xl mb-8" style="color: {{ text_color }};">
       {%- if search.performed -%}
         {{ 'general.search.results_for' | t: terms: search.terms | default: title }}
@@ -148,4 +148,4 @@
       {%- endif -%}
     {%- endif -%}
   </div>
-</div>
+</section>

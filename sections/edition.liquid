@@ -10,7 +10,7 @@
 
 <section
   id="{{ section_id }}"
-  class="{{ section_class }} py-12 px-6"
+  class="{{ section_class }} py-12"
   style="
     --section-padding-top: {{ section.settings.padding_top }}px;
     --section-padding-bottom: {{ section.settings.padding_bottom }}px;
@@ -18,7 +18,7 @@
     color: {{ text_color }};
   "
 >
-  <div class="container">
+  <div class="container px-6">
     {%- for block in section.blocks -%}
       {%- if block.type == 'edition' -%}
         <div class="mb-16 last:mb-0" {{ block.shopify_attributes }}>

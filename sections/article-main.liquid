@@ -72,8 +72,8 @@
   assign padding_bottom = section.settings.padding_bottom | default: 32
 -%}
 
-<div class="px-6" style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
-  <div class="container max-w-4xl">
+<section style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+  <div class="container px-6 max-w-4xl">
     {%- comment -%} Breadcrumb {%- endcomment -%}
     <div class="flex items-center gap-2 text-xs uppercase tracking-wider mb-2" style="color: {{ breadcrumb_color }};">
       <a href="{{ blog.url }}" class="hover:opacity-70">{{ blog.title }}</a>
@@ -107,7 +107,7 @@
       {{ article.content }}
     </div>
   </div>
-</div>
+</section>
 
 <style>
   .prose p {

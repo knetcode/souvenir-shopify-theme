@@ -7,14 +7,14 @@
 {%- if selected_blog != blank and selected_blog.articles.size > 0 -%}
   <section
     id="{{ section_id }}"
-    class="{{ section_class }} py-12 px-6"
+    class="{{ section_class }} py-12"
     style="
       --section-padding-top: {{ section.settings.padding_top }}px;
       --section-padding-bottom: {{ section.settings.padding_bottom }}px;
       background-color: {{ section.settings.background_color | default: '#ffffff' }};
     "
   >
-    <div class="container">
+    <div class="container px-6">
       {%- if section.settings.heading != blank -%}
         <h2 class="text-3xl md:text-4xl mb-8 uppercase tracking-wide">
           {{ section.settings.heading }}

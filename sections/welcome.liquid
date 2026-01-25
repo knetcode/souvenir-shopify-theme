@@ -88,16 +88,18 @@
   assign padding_bottom = section.settings.padding_bottom | default: 64
 -%}
 
-<section class="px-6 text-center max-w-3xl mx-auto" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
-  <p class="text-xs uppercase tracking-wider mb-4" style="color: {{ label_color }};">
-    {{ section.settings.label }}
-  </p>
-  <h2 class="text-2xl md:text-3xl lg:text-4xl leading-relaxed mb-6" style="color: {{ text_color }};">
-    {{ section.settings.heading }}
-  </h2>
-  {%- if section.settings.link != blank -%}
-    <a href="{{ section.settings.link }}" class="read-more" style="color: {{ text_color }};">
-      {{ section.settings.link_text }}
-    </a>
-  {%- endif -%}
+<section style="background-color: {{ bg_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;">
+  <div class="px-6 text-center max-w-3xl mx-auto" style="color: {{ text_color }};">
+    <p class="text-xs uppercase tracking-wider mb-4" style="color: {{ label_color }};">
+      {{ section.settings.label }}
+    </p>
+    <h2 class="text-2xl md:text-3xl lg:text-4xl leading-relaxed mb-6" style="color: {{ text_color }};">
+      {{ section.settings.heading }}
+    </h2>
+    {%- if section.settings.link != blank -%}
+      <a href="{{ section.settings.link }}" class="read-more" style="color: {{ text_color }};">
+        {{ section.settings.link_text }}
+      </a>
+    {%- endif -%}
+  </div>
 </section>

@@ -64,10 +64,9 @@
 -%}
 
 <section 
-  class="px-6"
   style="background-color: {{ bg_color }}; color: {{ text_color }}; padding-top: {{ padding_top }}px; padding-bottom: {{ padding_bottom }}px;"
 >
-  <div class="container">
+  <div class="container px-6">
     {%- if section.settings.content != blank -%}
       <div class="prose prose-lg max-w-none" style="color: {{ text_color }};">
         {{ section.settings.content }}

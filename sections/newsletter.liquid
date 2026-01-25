@@ -40,7 +40,7 @@
 {% endschema %}
 
 <section
-  class="py-16 px-6 text-center"
+  class="py-16 text-center"
   {% if section.settings.background_color %}
     style="background-color: {{ section.settings.background_color }};"
   {% endif -%}
@@ -48,6 +48,7 @@
     style="color: {{ section.settings.text_color }};"
   {% endif %}
 >
+  <div class="container px-6">
   <h3
     class="text-2xl md:text-3xl italic mb-8"
     {% if section.settings.text_color %}
@@ -74,6 +75,7 @@
       {{ section.settings.button_text }}
     </button>
   {% endform %}
+  </div>
 </section>
 
 <style>
